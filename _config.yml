@@ -29,7 +29,7 @@ description: >-                        # used by seo meta and the atom feed
   Welcome! My name is Lars and this is my website. Currently I work as a Security Developer at Wortell. In my free time I love to play guitar and nerd around with my home automation stuff.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: 'https://larsjelle.nl'
+url: 'https://larsjelle.github.io'
 
 github:
   username: larsjelle                   # change to your github username

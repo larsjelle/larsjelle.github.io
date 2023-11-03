@@ -154,8 +154,8 @@ defaults:
     values:
       comments: false
   - scope:
-      path: ''
-      type: tabs             # see `site.collections`
+      path: ""
+      type: tabs # see `site.collections`
     values:
       layout: page
       permalink: /:title/
@@ -181,14 +181,13 @@ compress_html:
     envs: [development]
 
 exclude:
-  - '*.gem'
-  - '*.gemspec'
+  - "*.gem"
+  - "*.gemspec"
+  - docs
   - tools
   - README.md
-  - CHANGELOG.md
   - LICENSE
-  - gulpfile.js
-  - node_modules
+  - rollup.config.js
   - package*.json
 
 jekyll-archives:

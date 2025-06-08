@@ -1,0 +1,67 @@
+<div class="profile-wrapper">
+  <div class="profile">
+    <img src="{{ site.avatar }}" alt="Avatar" class="avatar">
+    <div class="profile-info">
+      <h1 class="site-title">{{ site.title }}</h1>
+      <p class="site-tagline">{{ site.tagline }}</p>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    {% for tab in site.tabs %}
+      <li class="nav-item">
+        <a href="{{ tab.url | relative_url }}" class="nav-link {% if page.url == tab.url %}active{% endif %}">
+          <i class="{{ tab.icon }}"></i>
+          <span>{{ tab.title }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<div class="sidebar-bottom">
+  <div class="social-links">
+    {% if site.github_username %}
+      <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" class="social-link">
+        <i class="fab fa-github"></i>
+      </a>
+    {% endif %}
+    {% if site.twitter_username %}
+      <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener noreferrer" class="social-link">
+        <svg class="x-logo" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+    {% endif %}
+    {% if site.linkedin_url %}
+      <a href="{{ site.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="social-link">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    {% endif %}
+    {% if site.instagram_url %}
+      <a href="{{ site.instagram_url }}" target="_blank" rel="noopener noreferrer" class="social-link">
+        <i class="fab fa-instagram"></i>
+      </a>
+    {% endif %}
+    {% if site.author.email %}
+      <a href="mailto:{{ site.author.email }}" class="social-link">
+        <i class="fas fa-envelope"></i>
+      </a>
+    {% endif %}
+  </div>
+  
+  <div class="theme-toggle-wrapper">
+    <button id="theme-toggle-btn-sidebar" class="theme-toggle-sidebar" title="Toggle theme">
+      <i class="fas fa-sun"></i>
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+</div>

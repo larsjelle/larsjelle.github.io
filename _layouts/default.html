@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  {% include head.html %}
+  <body data-theme="{{ site.theme_mode | default: 'auto' }}">
+    <div id="sidebar" class="sidebar">
+      {% include sidebar.html %}
+    </div>
+    
+    <div id="main" class="main">
+      <div class="topbar">
+        {% include topbar.html %}
+      </div>
+      
+      <div class="content">
+        {{ content }}
+      </div>
+      
+      {% include footer.html %}
+    </div>
+    
+    {% include scripts.html %}
+  </body>
+</html>

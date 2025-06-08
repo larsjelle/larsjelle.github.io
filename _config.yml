@@ -1,201 +1,94 @@
-# The Site Configuration
+# Site Configuration
+title: Lars van Blitterswijk
+tagline: Tech and Security Enthusiast
+description: >-
+  Welcome! My name is Lars and this is my corner of the digital realm. 
+  I spend my days weaving security into the fabric of technology, 
+  crafting digital defenses against the shadows of cyberspace.
 
-# Import the theme
-theme: jekyll-theme-chirpy
-
-# Change the following value to '/PROJECT_NAME' ONLY IF your site type is GitHub Pages Project sites
-# and doesn't have a custom domain.
+url: 'https://larsjelle.github.io'
 baseurl: ''
 
-# The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
-# If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
-# otherwise, the layout language will use the default value of 'en'.
-lang: en
-
-# Additional parameters for datetime localization, optional. › https://github.com/iamkun/dayjs/tree/dev/src/locale
-prefer_datetime_locale:
-
-# Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
-timezone: Europe/Amsterdam
-
-# jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
-# ↓ --------------------------
-
-title: Lars van Blitterswijk                         # the main title
-
-tagline: Security Developer @ Wortell   # it will display as the sub-title
-
-description: >-                        # used by seo meta and the atom feed
-  Welcome! My name is Lars and this is my website. Currently I work as a Security Developer at Wortell. In my free time I love to play guitar and nerd around with my home automation stuff.
-
-# fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: 'https://larsjelle.github.io'
-
-github:
-  username: larsjelle                   # change to your github username
-
-twitter:
-  username: Larsjelle18                 # change to your twitter username
-
-social:
-  # Change to your full name.
-  # It will be displayed as the default author of the posts and the copyright owner in the Footer
+# Author
+author:
   name: Lars van Blitterswijk
-  email: contact@larsjelle.nl             # change to your email address
-  links:
-    # The first element serves as the copyright owner's link
-    - https://twitter.com/Larsjelle18      # change to your twitter homepage
-    - https://github.com/larsjelle       # change to your github homepage
-    - https://www.linkedin.com/in/lars-van-blitterswijk/
-    # Uncomment below to add more social links
-    # - https://www.facebook.com/username
+  email: contact@larsjelle.nl
+  url: https://larsjelle.github.io
 
-google_site_verification:               # fill in to your verification string
+# Social Links
+github_username: larsjelle
+twitter_username: Larsjelle18
+linkedin_url: https://www.linkedin.com/in/lars-van-blitterswijk/
+instagram_url: https://www.instagram.com/larsjelle/
 
-# ↑ --------------------------
-# The end of `jekyll-seo-tag` settings
+# Site Settings
+timezone: Europe/Amsterdam
+lang: en
+permalink: /posts/:title/
 
-google_analytics:
-  id:                 # fill in your Google Analytics ID
-  # Google Analytics pageviews report settings
-  pv:
-    proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
-    cache_path:       # the local PV cache data, friendly to visitors from GFW region
+# Avatar
+avatar: https://avatars.githubusercontent.com/u/18476229?v=4
 
-# Prefer color scheme setting.
-#
-# Note: Keep empty will follow the system prefer color by default,
-# and there will be a toggle to switch the theme between dark and light
-# on the bottom left of the sidebar.
-#
-# Available options:
-#
-#     light  - Use the light color scheme
-#     dark   - Use the dark color scheme
-#
-theme_mode:   # [light|dark]
+# Theme Mode
+theme_mode: # Leave empty for system preference
 
-# The CDN endpoint for images.
-# Notice that once it is assigned, the CDN url
-# will be added to all image (site avatar & posts' images) paths starting with '/'
-#
-# e.g. 'https://cdn.com'
-img_cdn: 'https://raw.githubusercontent.com/larsjelle/larsjelle.github.io/main/images'
-
-# the avatar on sidebar, support local or CORS resources
-avatar: /avatar.jpg
-
-# boolean type, the global switch for ToC in posts.
-toc: true
-
-comments:
-  active:         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
-  # The active options are as follows:
-  disqus:
-    shortname:    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
-  # utterances settings › https://utteranc.es/
-  utterances:
-    repo:         # <gh-username>/<repo>
-    issue_term:   # < url | pathname | title | ...>
-  # Giscus options › https://giscus.app
-  giscus:
-    repo:             # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
-    mapping:          # optional, default to 'pathname'
-    input_position:   # optional, default to 'bottom'
-    lang:             # optional, default to the value of `site.lang`
-
-# Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
-assets:
-  self_host:
-    enabled:      # boolean, keep empty means false
-    # specify the Jekyll environment, empty means both
-    # only works if `assets.self_host.enabled` is 'true'
-    env:          # [development|production]
-
-pwa:
-  enabled: true   # the option for PWA feature
-
-paginate: 10
-
-# ------------ The following options are not recommended to be modified ------------------
-
+# Build settings
+markdown: kramdown
+highlighter: rouge
 kramdown:
+  input: GFM
   syntax_highlighter: rouge
-  syntax_highlighter_opts:   # Rouge Options › https://github.com/jneen/rouge#full-options
+  syntax_highlighter_opts:
     css_class: highlight
-    # default_lang: console
-    span:
-      line_numbers: false
     block:
       line_numbers: true
-      start_line: 1
 
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+# Pagination
+paginate: 10
+paginate_path: "/page:num/"
+
+# Collections
 collections:
   tabs:
     output: true
     sort_by: order
 
+# Defaults
 defaults:
   - scope:
-      path: ''          # An empty string here means all files in the project
+      path: ""
       type: posts
     values:
       layout: post
-      comments: true    # Enable comments in posts.
-      toc: true         # Display TOC column in posts.
-      # DO NOT modify the following parameter unless you are confident enough
-      # to update the code of all other post links in this project.
+      comments: false
+      toc: true
       permalink: /posts/:title/
   - scope:
-      path: _drafts
-    values:
-      comments: false
-  - scope:
       path: ""
-      type: tabs # see `site.collections`
+      type: tabs
     values:
       layout: page
       permalink: /:title/
-  - scope:
-      path: assets/img/favicons
-    values:
-      swcache: true
-      published: false
-  - scope:
-      path: assets/js/dist
-    values:
-      swcache: true
 
-sass:
-  style: compressed
-
-compress_html:
-  clippings: all
-  comments: all
-  endings: all
-  profile: false
-  blanklines: false
-  ignore:
-    envs: [development]
-
+# Exclude
 exclude:
-  - "*.gem"
-  - "*.gemspec"
-  - docs
-  - tools
+  - Gemfile
+  - Gemfile.lock
   - README.md
   - LICENSE
-  - rollup.config.js
-  - package*.json
-
-jekyll-archives:
-  enabled: [categories, tags]
-  layouts:
-    category: category
-    tag: tag
-  permalinks:
-    tag: /tags/:name/
-    category: /categories/:name/
+  - _backup/
+  - vendor/
+  - .bundle/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - node_modules/
+  - package.json
+  - package-lock.json

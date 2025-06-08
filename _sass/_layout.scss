@@ -1,0 +1,92 @@
+// Main layout structure
+body {
+  display: flex;
+  min-height: 100vh;
+}
+
+#sidebar {
+  width: $sidebar-width;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: transform $transition-duration $transition-timing,
+              background-color $transition-duration $transition-timing;
+  
+  @media (max-width: $mobile) {
+    transform: translateX(-100%);
+    width: $sidebar-width-mobile;
+    
+    &.active {
+      transform: translateX(0);
+    }
+  }
+}
+
+#main {
+  flex: 1;
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: $mobile) {
+    margin-left: 0;
+  }
+}
+
+.topbar {
+  height: $topbar-height;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color $transition-duration $transition-timing;
+  
+  @media (max-width: $mobile) {
+    padding: 0 1rem;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  max-width: $content-max-width;
+  margin: 0 auto;
+  width: 100%;
+  
+  @media (max-width: $mobile) {
+    padding: 1.5rem 1rem;
+  }
+}
+
+.footer {
+  margin-top: auto;
+  padding: 2rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--sidebar-bg);
+  text-align: center;
+  
+  .footer-content {
+    max-width: $content-max-width;
+    margin: 0 auto;
+    
+    p {
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

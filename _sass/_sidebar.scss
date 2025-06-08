@@ -1,0 +1,182 @@
+// Sidebar styles
+.profile-wrapper {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile {
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid var(--border-color);
+    transition: transform $transition-duration $transition-timing;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  .site-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+  
+  .site-tagline {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+  }
+}
+
+.nav {
+  padding: 1rem 0;
+  
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-item {
+    margin-bottom: 0.5rem;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all $transition-duration $transition-timing;
+    border-radius: 0 25px 25px 0;
+    margin-right: 1rem;
+    
+    i {
+      width: 20px;
+      margin-right: 0.75rem;
+      text-align: center;
+    }
+    
+    &:hover,
+    &.active {
+      background-color: var(--accent-color);
+      color: white;
+      transform: translateX(8px);
+    }
+  }
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all $transition-duration $transition-timing;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+    
+    &:hover {
+      background-color: var(--accent-color);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+  }
+}
+
+.theme-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.theme-toggle-sidebar {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: var(--card-bg);
+  cursor: pointer;
+  transition: all $transition-duration $transition-timing;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px var(--shadow-color);
+    background: var(--accent-color);
+    
+    i {
+      color: white;
+    }
+  }
+  
+  i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all $transition-duration $transition-timing;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+  
+  .fa-sun {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .fa-moon {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+[data-theme="dark"] .theme-toggle-sidebar {
+  .fa-sun {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .fa-moon {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+// Custom X (Twitter) logo styling
+.x-logo {
+  width: 14px;
+  height: 14px;
+  transition: transform $transition-duration $transition-timing;
+}

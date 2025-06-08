@@ -163,6 +163,7 @@ defaults:
       path: assets/img/favicons
     values:
       swcache: true
+      published: false
   - scope:
       path: assets/js/dist
     values:

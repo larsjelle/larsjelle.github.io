@@ -1,19 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors'
-
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   darkMode: 'class',
   theme: {
-    colors: {
-      ...colors,
-    },
     extend: {
       typography: {
         DEFAULT: {
           css: {
             maxWidth: 'none',
             color: 'inherit',
+            lineHeight: '1.7',
             a: {
               color: 'inherit',
               textDecoration: 'underline',
@@ -25,6 +21,10 @@ export default {
             strong: {
               color: 'inherit',
               fontWeight: '600',
+            },
+            p: {
+              marginTop: '1.25em',
+              marginBottom: '1.25em',
             },
             'ol[type="A"]': {
               '--list-counter-style': 'upper-alpha',
@@ -55,21 +55,21 @@ export default {
             },
             'ol > li': {
               position: 'relative',
-            },
-            'ol > li::before': {
-              content: 'counter(list-item, var(--list-counter-style, decimal)) "."',
-              position: 'absolute',
-              fontWeight: '400',
-              color: 'inherit',
+              marginTop: '0.5em',
+              marginBottom: '0.5em',
             },
             'ul > li': {
               position: 'relative',
+              marginTop: '0.5em',
+              marginBottom: '0.5em',
             },
-            'ul > li::before': {
-              content: '""',
-              position: 'absolute',
-              backgroundColor: 'currentColor',
-              borderRadius: '50%',
+            'li > p': {
+              marginTop: '0.75em',
+              marginBottom: '0.75em',
+            },
+            'ol, ul': {
+              marginTop: '1.25em',
+              marginBottom: '1.25em',
             },
             hr: {
               borderColor: 'inherit',
@@ -110,13 +110,48 @@ export default {
             code: {
               color: 'inherit',
               fontWeight: '600',
+              fontSize: '0.875em',
+              '&::before': {
+                content: '""',
+              },
+              '&::after': {
+                content: '""',
+              },
             },
             'a code': {
               color: 'inherit',
             },
             pre: {
               color: 'inherit',
+              backgroundColor: 'rgb(15 23 42)',
+              overflowX: 'auto',
+              fontWeight: '400',
+              fontSize: '0.875em',
+              lineHeight: '1.7142857',
+              marginTop: '1.7142857em',
+              marginBottom: '1.7142857em',
+              borderRadius: '0.375rem',
+              paddingTop: '0.8571429em',
+              paddingRight: '1.1428571em',
+              paddingBottom: '0.8571429em',
+              paddingLeft: '1.1428571em',
+            },
+            'pre code': {
               backgroundColor: 'transparent',
+              borderWidth: '0',
+              borderRadius: '0',
+              padding: '0',
+              fontWeight: 'inherit',
+              color: 'rgb(226 232 240)',
+              fontSize: 'inherit',
+              fontFamily: 'inherit',
+              lineHeight: 'inherit',
+              '&::before': {
+                content: 'none',
+              },
+              '&::after': {
+                content: 'none',
+              },
             },
             thead: {
               borderBottomColor: 'inherit',

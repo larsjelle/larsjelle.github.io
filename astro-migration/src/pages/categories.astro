@@ -1,0 +1,99 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts and extract categories
+const posts = await getCollection('posts');
+const categoryMap = new Map<string, number>();
+
+posts.forEach(post => {
+  if (post.data.categories) {
+    post.data.categories.forEach(category => {
+      const count = categoryMap.get(category) || 0;
+      categoryMap.set(category, count + 1);
+    });
+  }
+});
+
+// Sort categories by post count (descending) then alphabetically
+const sortedCategories = Array.from(categoryMap.entries())
+  .sort(([a, countA], [b, countB]) => {
+    if (countB !== countA) return countB - countA;
+    return a.localeCompare(b);
+  });
+---
+
+<PageLayout title="Categories" description="Browse posts by category">
+  <div class="categories-page">
+    {sortedCategories.length > 0 ? (
+      <div>
+        <div class="stats mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <p class="text-blue-800 dark:text-blue-200">
+            <i class="fas fa-info-circle mr-2"></i>
+            Found <strong>{sortedCategories.length}</strong> categories across <strong>{posts.length}</strong> posts
+          </p>
+        </div>
+        
+        <div class="categories-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedCategories.map(([category, count]) => (
+            <div class="category-card bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+              <div class="category-header flex items-center justify-between mb-4">
+                <h3 class="category-name text-lg font-semibold text-gray-900 dark:text-white">
+                  <a 
+                    href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    {category}
+                  </a>
+                </h3>
+                <span class="post-count bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+                  {count} {count === 1 ? 'post' : 'posts'}
+                </span>
+              </div>
+              
+              <div class="category-preview">
+                {posts
+                  .filter(post => post.data.categories?.includes(category))
+                  .slice(0, 3)
+                  .map(post => (
+                    <div class="preview-post mb-2">
+                      <a 
+                        href={`/posts/${post.slug}`}
+                        class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-1"
+                      >
+                        {post.data.title}
+                      </a>
+                    </div>
+                  ))
+                }
+                {posts.filter(post => post.data.categories?.includes(category)).length > 3 && (
+                  <a 
+                    href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                  >
+                    View all {count} posts →
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div class="no-categories bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center">
+        <i class="fas fa-folder-open text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Categories Found</h3>
+        <p class="text-gray-600 dark:text-gray-400">Posts haven't been categorized yet.</p>
+      </div>
+    )}
+  </div>
+</PageLayout>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

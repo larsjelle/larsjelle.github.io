@@ -1,0 +1,190 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getPostNavigation, formatDate, calculateReadingTime } from '../utils/blog';
+
+export interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, date, categories, tags, excerpt, author } = post.data;
+
+// Format date
+const formattedDate = formatDate(date);
+
+// Reading time estimation
+const { Content } = await post.render();
+const wordCount = post.body.split(/\s+/g).length;
+const readingTime = calculateReadingTime(post.body);
+
+// Get navigation
+const navigation = await getPostNavigation(post.slug);
+---
+
+<BaseLayout title={title} description={excerpt}>
+  <article class="post max-w-4xl mx-auto">
+    <header class="post-header mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
+      <h1 class="post-title text-4xl font-bold mb-4 text-gray-900 dark:text-white leading-tight">
+        {title}
+      </h1>
+      
+      <div class="post-meta flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
+        <div class="meta-item flex items-center gap-2">
+          <i class="fas fa-calendar"></i>
+          <time datetime={date.toISOString()}>{formattedDate}</time>
+        </div>
+        
+        {author && (
+          <div class="meta-item flex items-center gap-2">
+            <i class="fas fa-user"></i>
+            <span>{author}</span>
+          </div>
+        )}
+        
+        <div class="meta-item flex items-center gap-2">
+          <i class="fas fa-clock"></i>
+          <span>{readingTime} min read</span>
+        </div>
+        
+        <div class="meta-item flex items-center gap-2">
+          <i class="fas fa-word"></i>
+          <span>{wordCount} words</span>
+        </div>
+      </div>
+      
+      {categories && categories.length > 0 && (
+        <div class="post-categories mt-4 flex flex-wrap gap-2">
+          <span class="text-gray-700 dark:text-gray-300 font-medium">Categories:</span>
+          {categories.map((category) => (
+            <a 
+              href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+              class="category bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+            >
+              {category}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+    
+    <div class="post-content prose prose-lg max-w-none dark:prose-invert
+                prose-headings:text-gray-900 dark:prose-headings:text-white
+                prose-p:text-gray-700 dark:prose-p:text-gray-300
+                prose-a:text-blue-600 dark:prose-a:text-blue-400
+                prose-strong:text-gray-900 dark:prose-strong:text-white
+                prose-code:text-pink-600 dark:prose-code:text-pink-400
+                prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800
+                prose-blockquote:border-blue-500
+                prose-th:text-gray-900 dark:prose-th:text-white
+                prose-td:text-gray-700 dark:prose-td:text-gray-300">
+      <Content />
+    </div>
+    
+    {tags && tags.length > 0 && (
+      <footer class="post-footer mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="post-tags">
+          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Tags</h3>
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <a 
+                href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                class="tag bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
+    )}
+    
+    <!-- Navigation between posts -->
+    <nav class="post-navigation mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+        <div class="nav-previous">
+          {navigation.previous ? (
+            <a 
+              href={`/posts/${navigation.previous.slug}`}
+              class="group flex flex-col text-left p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <span class="text-sm text-gray-500 dark:text-gray-400 mb-1">← Previous Post</span>
+              <span class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {navigation.previous.data.title}
+              </span>
+            </a>
+          ) : (
+            <div class="p-4"></div>
+          )}
+        </div>
+        
+        <div class="nav-home text-center">
+          <a 
+            href="/" 
+            class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <i class="fas fa-home mr-2"></i>
+            Back to Home
+          </a>
+        </div>
+        
+        <div class="nav-next">
+          {navigation.next ? (
+            <a 
+              href={`/posts/${navigation.next.slug}`}
+              class="group flex flex-col text-right p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <span class="text-sm text-gray-500 dark:text-gray-400 mb-1">Next Post →</span>
+              <span class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {navigation.next.data.title}
+              </span>
+            </a>
+          ) : (
+            <div class="p-4"></div>
+          )}
+        </div>
+      </div>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-content {
+    line-height: 1.7;
+  }
+  
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content h4,
+  .post-content h5,
+  .post-content h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-content pre {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  
+  .post-content code {
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .post-content blockquote {
+    padding: 1rem 1.5rem;
+    border-left: 4px solid;
+    border-radius: 0.25rem;
+    margin: 1.5rem 0;
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+</style>

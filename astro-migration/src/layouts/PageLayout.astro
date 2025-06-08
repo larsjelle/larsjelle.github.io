@@ -1,0 +1,108 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  showBreadcrumb?: boolean;
+}
+
+const { title, description, showBreadcrumb = true } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="page max-w-4xl mx-auto">
+    {showBreadcrumb && (
+      <nav class="breadcrumb mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>
+            <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <i class="fas fa-home"></i>
+              <span class="sr-only">Home</span>
+            </a>
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <span class="text-gray-900 dark:text-white font-medium">{title}</span>
+          </li>
+        </ol>
+      </nav>
+    )}
+    
+    <div class="page-header mb-8">
+      <h1 class="page-title text-4xl font-bold text-gray-900 dark:text-white">
+        {title}
+      </h1>
+      {description && (
+        <p class="page-description mt-4 text-lg text-gray-700 dark:text-gray-300">
+          {description}
+        </p>
+      )}
+    </div>
+    
+    <div class="page-content bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+      <div class="prose prose-lg max-w-none dark:prose-invert
+                  prose-headings:text-gray-900 dark:prose-headings:text-white
+                  prose-p:text-gray-700 dark:prose-p:text-gray-300
+                  prose-a:text-blue-600 dark:prose-a:text-blue-400
+                  prose-strong:text-gray-900 dark:prose-strong:text-white
+                  prose-code:text-pink-600 dark:prose-code:text-pink-400
+                  prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800
+                  prose-blockquote:border-blue-500
+                  prose-th:text-gray-900 dark:prose-th:text-white
+                  prose-td:text-gray-700 dark:prose-td:text-gray-300">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-content {
+    line-height: 1.7;
+  }
+  
+  .page-content h1,
+  .page-content h2,
+  .page-content h3,
+  .page-content h4,
+  .page-content h5,
+  .page-content h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .page-content p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .page-content ul,
+  .page-content ol {
+    margin-bottom: 1.5rem;
+  }
+  
+  .page-content li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-content pre {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  
+  .page-content code {
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .page-content blockquote {
+    padding: 1rem 1.5rem;
+    border-left: 4px solid;
+    border-radius: 0.25rem;
+    margin: 1.5rem 0;
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+</style>

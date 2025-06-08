@@ -1,0 +1,157 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts
+const posts = await getCollection('posts');
+
+// Sort posts by date (newest first)
+const sortedPosts = posts
+  .filter(post => post.data.draft !== true)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// Group posts by year
+const postsByYear = new Map<number, typeof sortedPosts>();
+sortedPosts.forEach(post => {
+  const year = new Date(post.data.date).getFullYear();
+  if (!postsByYear.has(year)) {
+    postsByYear.set(year, []);
+  }
+  postsByYear.get(year)!.push(post);
+});
+
+// Sort years in descending order
+const sortedYears = Array.from(postsByYear.keys()).sort((a, b) => b - a);
+---
+
+<PageLayout title="Archives" description="Browse all posts chronologically">
+  <div class="archives-page">
+    {sortedPosts.length > 0 ? (
+      <div>
+        <div class="stats mb-8 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+          <p class="text-purple-800 dark:text-purple-200">
+            <i class="fas fa-info-circle mr-2"></i>
+            Total of <strong>{sortedPosts.length}</strong> posts published across <strong>{sortedYears.length}</strong> {sortedYears.length === 1 ? 'year' : 'years'}
+          </p>
+        </div>
+        
+        <!-- Years Timeline -->
+        <div class="timeline">
+          {sortedYears.map(year => {
+            const yearPosts = postsByYear.get(year)!;
+            return (
+              <div class="year-section mb-12">
+                <div class="year-header sticky top-4 z-10 bg-white dark:bg-gray-900 py-2 mb-6">
+                  <h2 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <span class="bg-purple-600 text-white px-4 py-2 rounded-lg mr-4">
+                      {year}
+                    </span>
+                    <span class="text-lg font-normal text-gray-600 dark:text-gray-400">
+                      {yearPosts.length} {yearPosts.length === 1 ? 'post' : 'posts'}
+                    </span>
+                  </h2>
+                </div>
+                
+                <div class="posts-list space-y-4">
+                  {yearPosts.map(post => (
+                    <article class="post-entry bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all p-6 border-l-4 border-purple-400">
+                      <div class="post-meta mb-2">
+                        <time class="text-sm text-gray-600 dark:text-gray-400" datetime={post.data.date.toISOString()}>
+                          {post.data.date.toLocaleDateString('en-US', { 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </time>
+                      </div>
+                      
+                      <h3 class="post-title text-xl font-semibold mb-2">
+                        <a 
+                          href={`/posts/${post.slug}`}
+                          class="text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                        >
+                          {post.data.title}
+                        </a>
+                      </h3>
+                      
+                      {post.data.excerpt && (
+                        <p class="post-excerpt text-gray-700 dark:text-gray-300 mb-3 line-clamp-2">
+                          {post.data.excerpt}
+                        </p>
+                      )}
+                      
+                      <div class="post-metadata flex flex-wrap items-center gap-4 text-sm">
+                        {post.data.categories && post.data.categories.length > 0 && (
+                          <div class="categories flex gap-2">
+                            {post.data.categories.slice(0, 2).map(category => (
+                              <a 
+                                href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                                class="category bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                              >
+                                {category}
+                              </a>
+                            ))}
+                            {post.data.categories.length > 2 && (
+                              <span class="text-gray-500 dark:text-gray-400 text-xs">
+                                +{post.data.categories.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        
+                        {post.data.tags && post.data.tags.length > 0 && (
+                          <div class="tags flex gap-2">
+                            {post.data.tags.slice(0, 3).map(tag => (
+                              <a 
+                                href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                                class="tag bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                              >
+                                #{tag}
+                              </a>
+                            ))}
+                            {post.data.tags.length > 3 && (
+                              <span class="text-gray-500 dark:text-gray-400 text-xs">
+                                +{post.data.tags.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    ) : (
+      <div class="no-posts bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center">
+        <i class="fas fa-archive text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Posts Found</h3>
+        <p class="text-gray-600 dark:text-gray-400">The archives are empty. Check back soon for new content!</p>
+      </div>
+    )}
+  </div>
+</PageLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .year-header {
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+  }
+  
+  .dark .year-header {
+    border-bottom-color: rgba(75, 85, 99, 0.5);
+  }
+  
+  .post-entry:hover {
+    transform: translateY(-2px);
+  }
+</style>

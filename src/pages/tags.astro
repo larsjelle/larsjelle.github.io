@@ -1,0 +1,135 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts and extract tags
+const posts = await getCollection('posts');
+const tagMap = new Map<string, number>();
+
+posts.forEach(post => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => {
+      const count = tagMap.get(tag) || 0;
+      tagMap.set(tag, count + 1);
+    });
+  }
+});
+
+// Sort tags by post count (descending) then alphabetically
+const sortedTags = Array.from(tagMap.entries())
+  .sort(([a, countA], [b, countB]) => {
+    if (countB !== countA) return countB - countA;
+    return a.localeCompare(b);
+  });
+---
+
+<PageLayout title="Tags" description="Browse posts by tags">
+  <div class="tags-page">
+    {sortedTags.length > 0 ? (
+      <div>
+        <div class="stats mb-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <p class="text-green-800 dark:text-green-200">
+            <i class="fas fa-info-circle mr-2"></i>
+            Found <strong>{sortedTags.length}</strong> tags across <strong>{posts.length}</strong> posts
+          </p>
+        </div>
+        
+        <!-- Tag Cloud -->
+        <div class="tag-cloud mb-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Tag Cloud</h3>
+          <div class="flex flex-wrap gap-2">
+            {sortedTags.map(([tag, count]) => {
+              // Calculate font size based on post count (min: text-sm, max: text-2xl)
+              const maxCount = Math.max(...sortedTags.map(([, c]) => c));
+              const minCount = Math.min(...sortedTags.map(([, c]) => c));
+              const range = maxCount - minCount;
+              const normalized = range > 0 ? (count - minCount) / range : 0;
+              const sizeClass = normalized > 0.8 ? 'text-2xl' : 
+                              normalized > 0.6 ? 'text-xl' : 
+                              normalized > 0.4 ? 'text-lg' : 
+                              normalized > 0.2 ? 'text-base' : 'text-sm';
+              
+              return (
+                <a 
+                  href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                  class={`tag-cloud-item ${sizeClass} bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-800 dark:hover:text-blue-200 transition-colors font-medium`}
+                  title={`${count} ${count === 1 ? 'post' : 'posts'}`}
+                >
+                  #{tag}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+        
+        <!-- Detailed Tag List -->
+        <div class="tags-list">
+          <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">All Tags</h3>
+          <div class="tags-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedTags.map(([tag, count]) => (
+              <div class="tag-card bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all p-4 border border-gray-200 dark:border-gray-700">
+                <div class="tag-header flex items-center justify-between mb-3">
+                  <h4 class="tag-name text-base font-semibold text-gray-900 dark:text-white">
+                    <a 
+                      href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                      class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                      #{tag}
+                    </a>
+                  </h4>
+                  <span class="post-count bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-xs font-medium">
+                    {count}
+                  </span>
+                </div>
+                
+                <div class="tag-preview">
+                  {posts
+                    .filter(post => post.data.tags?.includes(tag))
+                    .slice(0, 2)
+                    .map(post => (
+                      <div class="preview-post mb-1">
+                        <a 
+                          href={`/posts/${post.slug}`}
+                          class="text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-1"
+                        >
+                          {post.data.title}
+                        </a>
+                      </div>
+                    ))
+                  }
+                  {posts.filter(post => post.data.tags?.includes(tag)).length > 2 && (
+                    <a 
+                      href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                      class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                    >
+                      +{count - 2} more →
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="no-tags bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center">
+        <i class="fas fa-tags text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Tags Found</h3>
+        <p class="text-gray-600 dark:text-gray-400">Posts haven't been tagged yet.</p>
+      </div>
+    )}
+  </div>
+</PageLayout>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .tag-cloud-item:hover {
+    transform: translateY(-1px);
+  }
+</style>

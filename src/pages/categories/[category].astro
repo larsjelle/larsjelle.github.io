@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const categories = new Set<string>();
+  
+  posts.forEach(post => {
+    post.data.categories?.forEach(category => {
+      categories.add(category);
+    });
+  });
+  
+  return Array.from(categories).map(category => ({
+    params: { category: category.toLowerCase().replace(/\s+/g, '-') },
+    props: { 
+      category,
+      posts: posts.filter(post => 
+        post.data.categories?.includes(category) && !post.data.draft
+      ).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+    },
+  }));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<PageLayout title={`Category: ${category}`} description={`Posts in the ${category} category`}>
+  <div class="category-page">
+    <div class="category-header mb-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-200 mb-2">
+            <i class="fas fa-folder mr-2"></i>
+            {category}
+          </h2>
+          <p class="text-blue-700 dark:text-blue-300">
+            {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
+          </p>
+        </div>
+        <a 
+          href="/categories" 
+          class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          ← All Categories
+        </a>
+      </div>
+    </div>
+    
+    {posts.length > 0 ? (
+      <div class="posts-list space-y-6">
+        {posts.map(post => (
+          <article class="post-preview bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+            <header class="post-header mb-4">
+              <h3 class="post-title text-xl font-semibold mb-2">
+                <a 
+                  href={`/posts/${post.slug}`} 
+                  class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  {post.data.title}
+                </a>
+              </h3>
+              <div class="post-meta flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <time datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </time>
+                <span class="author">by {post.data.author}</span>
+              </div>
+            </header>
+            
+            {post.data.excerpt && (
+              <div class="post-excerpt text-gray-700 dark:text-gray-300 mb-4">
+                <p>{post.data.excerpt}</p>
+              </div>
+            )}
+            
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="post-tags flex flex-wrap gap-2">
+                {post.data.tags.slice(0, 5).map(tag => (
+                  <a 
+                    href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                    class="tag bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    #{tag}
+                  </a>
+                ))}
+                {post.data.tags.length > 5 && (
+                  <span class="text-gray-500 dark:text-gray-400 text-xs">
+                    +{post.data.tags.length - 5} more
+                  </span>
+                )}
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+    ) : (
+      <div class="no-posts bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center">
+        <i class="fas fa-folder-open text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Posts Found</h3>
+        <p class="text-gray-600 dark:text-gray-400">
+          No posts have been published in the "{category}" category yet.
+        </p>
+      </div>
+    )}
+  </div>
+</PageLayout>

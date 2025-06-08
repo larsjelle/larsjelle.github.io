@@ -1,0 +1,128 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="About" description="Learn more about Lars van Blitterswijk">
+  <div class="space-y-6">
+    <div class="profile-section">
+      <div class="flex items-center space-x-6 mb-6">
+        <img 
+          src="https://avatars.githubusercontent.com/u/18476229?v=4" 
+          alt="Lars van Blitterswijk" 
+          class="w-24 h-24 rounded-full object-cover shadow-lg"
+        />
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Lars van Blitterswijk</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400">Tech and Security Enthusiast</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bio-section">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">About Me</h3>
+      <div class="space-y-4 text-gray-700 dark:text-gray-300">
+        <p>
+          Welcome! My name is Lars and this is my corner of the digital realm. 
+          I spend my days weaving security into the fabric of technology, 
+          crafting digital defenses against the shadows of cyberspace.
+        </p>
+        <p>
+          As a passionate technology and security enthusiast, I explore the ever-evolving 
+          landscape of cybersecurity, software development, and digital innovation. 
+          This blog serves as a platform to share insights, experiences, and discoveries 
+          from my journey in the tech world.
+        </p>
+      </div>
+    </div>
+
+    <div class="interests-section">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Interests & Expertise</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="interest-card bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+          <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+            <i class="fas fa-shield-alt mr-2"></i>
+            Cybersecurity
+          </h4>
+          <p class="text-sm text-blue-700 dark:text-blue-300">
+            Digital defense strategies, threat analysis, and security architecture
+          </p>
+        </div>
+        
+        <div class="interest-card bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+          <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">
+            <i class="fas fa-code mr-2"></i>
+            Software Development
+          </h4>
+          <p class="text-sm text-green-700 dark:text-green-300">
+            Modern web technologies, TypeScript, and system architecture
+          </p>
+        </div>
+        
+        <div class="interest-card bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+          <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+            <i class="fas fa-network-wired mr-2"></i>
+            Infrastructure
+          </h4>
+          <p class="text-sm text-purple-700 dark:text-purple-300">
+            Cloud architecture, DevOps practices, and system administration
+          </p>
+        </div>
+        
+        <div class="interest-card bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+          <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+            <i class="fas fa-lightbulb mr-2"></i>
+            Innovation
+          </h4>
+          <p class="text-sm text-orange-700 dark:text-orange-300">
+            Emerging technologies, AI/ML applications, and digital transformation
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-section">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Get In Touch</h3>
+      <div class="flex flex-wrap gap-4">
+        <a 
+          href="https://github.com/larsjelle" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="contact-link bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          <i class="fab fa-github mr-2"></i>
+          GitHub
+        </a>
+        
+        <a 
+          href="https://twitter.com/Larsjelle18" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="contact-link bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          <svg class="inline w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Twitter/X
+        </a>
+        
+        <a 
+          href="https://www.linkedin.com/in/lars-van-blitterswijk/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="contact-link bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <i class="fab fa-linkedin mr-2"></i>
+          LinkedIn
+        </a>
+        
+        <a 
+          href="mailto:contact@larsjelle.nl"
+          class="contact-link bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          Email
+        </a>
+      </div>
+    </div>
+  </div>
+</PageLayout>

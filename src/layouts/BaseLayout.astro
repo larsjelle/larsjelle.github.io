@@ -1,0 +1,297 @@
+---
+import '../styles/global.css';
+import { getAllCategories } from '../utils/blog';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  themeMode?: string;
+}
+
+const { 
+  title = "larsjelle",
+  description = "technology, crafting digital defenses against the shadows of cyberspace.",
+  lang = "en",
+  themeMode = "auto"
+} = Astro.props;
+
+// Get all categories for the dropdown
+const categories = await getAllCategories();
+
+// Site configuration
+const siteConfig = {
+  title: "Larsjelle",
+  tagline: "Do with passion",
+  description,
+  url: "https://larsjelle.github.io",
+  author: {
+    name: "Lars van Blitterswijk",
+    email: "contact@larsjelle.nl",
+    url: "https://larsjelle.github.io"
+  },
+  social: {
+    github: "larsjelle",
+    twitter: "Larsjelle18",
+    linkedin: "https://www.linkedin.com/in/lars-van-blitterswijk/",
+    instagram: "https://www.instagram.com/larsjelle/"
+  },
+  avatar: "https://avatars.githubusercontent.com/u/18476229?v=4"
+};
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.author.name} />
+    
+    <!-- Theme Mode -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  </head>
+  
+  <body data-theme={themeMode} class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
+      <div class="profile-wrapper p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="profile flex items-center space-x-3">
+          <img src={siteConfig.avatar} alt="Avatar" class="avatar w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover flex-shrink-0" />
+          <div class="profile-info min-w-0 flex-1">
+            <h1 class="site-title text-lg sm:text-xl font-bold text-gray-900 dark:text-white truncate">{siteConfig.title}</h1>
+            <p class="site-tagline text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">{siteConfig.tagline}</p>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="nav p-4">
+        <ul class="nav-list space-y-2">
+          <li class="nav-item">
+            <a href="/" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-home w-5"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/about" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-user w-5"></i>
+              <span>About</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <button 
+              id="categories-toggle"
+              class="categories-toggle w-full nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
+              <i class="fas fa-folder w-5"></i>
+              <span>Categories</span>
+              <i id="categories-chevron" class="fas fa-chevron-down w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
+            </button>
+            <!-- Categories List -->
+            <div id="categories-list" class="categories-list overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+              <ul class="mt-2 ml-8 space-y-1 max-h-64 overflow-y-auto">
+                <li>
+                  <a href="/categories" class="block px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors">
+                    <i class="fas fa-list w-4 mr-2"></i>
+                    All Categories
+                  </a>
+                </li>
+                {categories.map((category) => (
+                  <li>
+                    <a 
+                      href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                      class="block px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
+                    >
+                      <i class="fas fa-tag w-4 mr-2"></i>
+                      {category}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="/tags" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-tags w-5"></i>
+              <span>Tags</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/archives" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-archive w-5"></i>
+              <span>Archives</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/search" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-search w-5"></i>
+              <span>Search</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-bottom absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="social-links flex justify-center space-x-3 sm:space-x-4">
+          <a href={`https://github.com/${siteConfig.social.github}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+            <i class="fab fa-github text-lg sm:text-xl"></i>
+          </a>
+          <a href={`https://twitter.com/${siteConfig.social.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+            <svg class="x-logo w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+            <i class="fab fa-linkedin text-lg sm:text-xl"></i>
+          </a>
+          <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+            <i class="fab fa-instagram text-lg sm:text-xl"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div id="main" class="main lg:ml-64 min-h-screen flex flex-col">
+      <div class="topbar bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 lg:hidden sticky top-0 z-30">
+        <div class="flex items-center justify-between max-w-full">
+          <button 
+            id="sidebar-toggle" 
+            class="flex items-center justify-center w-10 h-10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+            aria-label="Toggle sidebar navigation"
+          >
+            <i class="fas fa-bars text-lg"></i>
+          </button>
+          
+          <div class="flex items-center space-x-2 min-w-0 flex-1 justify-center">
+            <span class="text-lg font-semibold text-gray-900 dark:text-white truncate">
+              {siteConfig.title}
+            </span>
+          </div>
+          
+          <div class="w-10 h-10"></div> <!-- Spacer for centering -->
+        </div>
+      </div>
+      
+      <div class="content flex-1 p-4 sm:p-6">
+        <slot />
+      </div>
+      
+      <footer class="footer mt-auto p-6 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p>&copy; {new Date().getFullYear()} {siteConfig.author.name}. All rights reserved.</p>
+      </footer>
+    </div>
+    
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      // Mobile sidebar toggle
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      
+      function openSidebar() {
+        if (sidebar && sidebarOverlay) {
+          sidebar.classList.remove('-translate-x-full');
+          sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+          sidebarOverlay.classList.add('opacity-100');
+          document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+      }
+      
+      function closeSidebar() {
+        if (sidebar && sidebarOverlay) {
+          sidebar.classList.add('-translate-x-full');
+          sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+          sidebarOverlay.classList.remove('opacity-100');
+          document.body.style.overflow = ''; // Restore scrolling
+        }
+      }
+      
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (sidebar.classList.contains('-translate-x-full')) {
+            openSidebar();
+          } else {
+            closeSidebar();
+          }
+        });
+      }
+      
+      // Close sidebar when clicking overlay
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+      }
+      
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth < 1024 && 
+            sidebar && 
+            !sidebar.contains(e.target as Node) && 
+            !sidebarToggle?.contains(e.target as Node) &&
+            !sidebar.classList.contains('-translate-x-full')) {
+          closeSidebar();
+        }
+      });
+      
+      // Close sidebar on window resize to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+          closeSidebar();
+        }
+      });
+
+      // Categories toggle functionality
+      const categoriesToggle = document.getElementById('categories-toggle');
+      const categoriesList = document.getElementById('categories-list');
+      const categoriesChevron = document.getElementById('categories-chevron');
+      
+      if (categoriesToggle && categoriesList && categoriesChevron) {
+        categoriesToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const isExpanded = categoriesList.style.maxHeight && categoriesList.style.maxHeight !== '0px';
+          
+          if (isExpanded) {
+            // Collapse
+            categoriesList.style.maxHeight = '0px';
+            categoriesChevron.classList.remove('fa-chevron-up');
+            categoriesChevron.classList.add('fa-chevron-down');
+          } else {
+            // Expand
+            categoriesList.style.maxHeight = categoriesList.scrollHeight + 'px';
+            categoriesChevron.classList.remove('fa-chevron-down');
+            categoriesChevron.classList.add('fa-chevron-up');
+          }
+        });
+      }
+      
+      // Theme persistence
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+          html.classList.add('dark');
+        }
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        html.classList.add('dark');
+      }
+    </script>
+  </body>
+</html>

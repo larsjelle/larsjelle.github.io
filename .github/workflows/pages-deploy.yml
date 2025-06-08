@@ -1,14 +1,8 @@
-name: "Build and Deploy"
+name: Deploy Astro site to Pages
+
 on:
   push:
-    branches:
-      - main
-      - master
-    paths-ignore:
-      - .gitignore
-      - README.md
-      - LICENSE
-  # Allows you to run this workflow manually from the Actions tab
+    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -16,50 +10,38 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-          # submodules: true
-          # If using the 'assets' git submodule from Chirpy Starter, uncomment above
-          # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
-
+          node-version: "18"
+          cache: "npm"
+      
       - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v3
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: actions/configure-pages@v5
         with:
-          ruby-version: 3.2
-          bundler-cache: true
-
-      - name: Build site
-        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: "production"
-
-      - name: Test site
-        run: |
-          bundle exec htmlproofer _site \
-            \-\-disable-external=true \
-            \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v4
+          static_site_generator: astro
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build with Astro
+        run: npm run build
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
-          path: "_site${{ steps.pages.outputs.base_path }}"
+          path: ./dist
 
   deploy:
     environment:
@@ -68,11 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: .
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

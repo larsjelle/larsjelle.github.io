@@ -36,7 +36,7 @@ const siteConfig = {
     linkedin: "https://www.linkedin.com/in/lars-van-blitterswijk/",
     instagram: "https://www.instagram.com/larsjelle/"
   },
-  avatar: "https://avatars.githubusercontent.com/u/18476229?v=4"
+  avatar: "/img/avatar.jpg"
 };
 ---
 
@@ -67,8 +67,8 @@ const siteConfig = {
     <!-- Sidebar overlay for mobile -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"></div>
     
-    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
-      <div class="profile-wrapper p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto flex flex-col">
+      <div class="profile-wrapper p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
         <div class="profile flex items-center space-x-3">
           <img src={siteConfig.avatar} alt="Avatar" class="avatar w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover flex-shrink-0" />
           <div class="profile-info min-w-0 flex-1">
@@ -78,7 +78,7 @@ const siteConfig = {
         </div>
       </div>
       
-      <nav class="nav p-4">
+      <nav class="nav p-4 flex-1 overflow-y-auto">
         <ul class="nav-list space-y-2">
           <li class="nav-item">
             <a href="/" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -145,20 +145,20 @@ const siteConfig = {
         </ul>
       </nav>
       
-      <div class="sidebar-bottom absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700">
+      <div class="sidebar-bottom mt-auto p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
         <div class="social-links flex justify-center space-x-3 sm:space-x-4">
-          <a href={`https://github.com/${siteConfig.social.github}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+          <a href={`https://github.com/${siteConfig.social.github}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
             <i class="fab fa-github text-lg sm:text-xl"></i>
           </a>
-          <a href={`https://twitter.com/${siteConfig.social.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+          <a href={`https://twitter.com/${siteConfig.social.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
             <svg class="x-logo w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </a>
-          <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+          <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
             <i class="fab fa-linkedin text-lg sm:text-xl"></i>
           </a>
-          <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1">
+          <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
             <i class="fab fa-instagram text-lg sm:text-xl"></i>
           </a>
         </div>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getAllCategories } from '../utils/blog';
 
 export interface Props {
   title?: string;
@@ -9,16 +10,19 @@ export interface Props {
 }
 
 const { 
-  title = "Lars van Blitterswijk", 
-  description = "Welcome! My name is Lars and this is my corner of the digital realm. I spend my days weaving security into the fabric of technology, crafting digital defenses against the shadows of cyberspace.",
+  title = "larsjelle",
+  description = "technology, crafting digital defenses against the shadows of cyberspace.",
   lang = "en",
   themeMode = "auto"
 } = Astro.props;
 
+// Get all categories for the dropdown
+const categories = await getAllCategories();
+
 // Site configuration
 const siteConfig = {
-  title: "Lars van Blitterswijk",
-  tagline: "Tech and Security Enthusiast",
+  title: "Larsjelle",
+  tagline: "Do with passion",
   description,
   url: "https://larsjelle.github.io",
   author: {
@@ -89,10 +93,36 @@ const siteConfig = {
             </a>
           </li>
           <li class="nav-item">
-            <a href="/categories" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <button 
+              id="categories-toggle"
+              class="categories-toggle w-full nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
               <i class="fas fa-folder w-5"></i>
               <span>Categories</span>
-            </a>
+              <i id="categories-chevron" class="fas fa-chevron-down w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
+            </button>
+            <!-- Categories List -->
+            <div id="categories-list" class="categories-list overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+              <ul class="mt-2 ml-8 space-y-1 max-h-64 overflow-y-auto">
+                <li>
+                  <a href="/categories" class="block px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors">
+                    <i class="fas fa-list w-4 mr-2"></i>
+                    All Categories
+                  </a>
+                </li>
+                {categories.map((category) => (
+                  <li>
+                    <a 
+                      href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                      class="block px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
+                    >
+                      <i class="fas fa-tag w-4 mr-2"></i>
+                      {category}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </li>
           <li class="nav-item">
             <a href="/tags" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -226,6 +256,31 @@ const siteConfig = {
           closeSidebar();
         }
       });
+
+      // Categories toggle functionality
+      const categoriesToggle = document.getElementById('categories-toggle');
+      const categoriesList = document.getElementById('categories-list');
+      const categoriesChevron = document.getElementById('categories-chevron');
+      
+      if (categoriesToggle && categoriesList && categoriesChevron) {
+        categoriesToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const isExpanded = categoriesList.style.maxHeight && categoriesList.style.maxHeight !== '0px';
+          
+          if (isExpanded) {
+            // Collapse
+            categoriesList.style.maxHeight = '0px';
+            categoriesChevron.classList.remove('fa-chevron-up');
+            categoriesChevron.classList.add('fa-chevron-down');
+          } else {
+            // Expand
+            categoriesList.style.maxHeight = categoriesList.scrollHeight + 'px';
+            categoriesChevron.classList.remove('fa-chevron-down');
+            categoriesChevron.classList.add('fa-chevron-up');
+          }
+        });
+      }
       
       // Theme persistence
       const savedTheme = localStorage.getItem('theme');

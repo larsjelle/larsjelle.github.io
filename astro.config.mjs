@@ -7,6 +7,8 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://larsjelle.github.io',
+  output: 'static',
+  adapter: undefined,
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {

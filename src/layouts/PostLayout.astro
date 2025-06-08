@@ -71,13 +71,18 @@ const navigation = await getPostNavigation(post.slug);
     <div class="post-content prose prose-lg max-w-none dark:prose-invert
                 prose-headings:text-gray-900 dark:prose-headings:text-white
                 prose-p:text-gray-700 dark:prose-p:text-gray-300
-                prose-a:text-blue-600 dark:prose-a:text-blue-400
+                prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-700 dark:hover:prose-a:text-blue-300
                 prose-strong:text-gray-900 dark:prose-strong:text-white
-                prose-code:text-pink-600 dark:prose-code:text-pink-400
-                prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800
-                prose-blockquote:border-blue-500
+                prose-em:text-gray-700 dark:prose-em:text-gray-300
+                prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700
+                prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20
                 prose-th:text-gray-900 dark:prose-th:text-white
-                prose-td:text-gray-700 dark:prose-td:text-gray-300">
+                prose-td:text-gray-700 dark:prose-td:text-gray-300
+                prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+                prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+                prose-li:text-gray-700 dark:prose-li:text-gray-300
+                prose-hr:border-gray-300 dark:prose-hr:border-gray-600">
       <Content />
     </div>
     
@@ -162,6 +167,12 @@ const navigation = await getPostNavigation(post.slug);
     margin-top: 2rem;
     margin-bottom: 1rem;
     font-weight: 600;
+    scroll-margin-top: 2rem;
+  }
+  
+  .post-content h2 {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
   }
   
   .post-content p {
@@ -172,19 +183,87 @@ const navigation = await getPostNavigation(post.slug);
     border-radius: 0.5rem;
     padding: 1rem;
     overflow-x: auto;
+    border: 1px solid #e5e7eb;
   }
   
-  .post-content code {
+  .post-content code:not(pre code) {
     padding: 0.2rem 0.4rem;
     border-radius: 0.25rem;
     font-size: 0.875em;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
   }
   
   .post-content blockquote {
     padding: 1rem 1.5rem;
-    border-left: 4px solid;
+    border-left: 4px solid #3b82f6;
     border-radius: 0.25rem;
     margin: 1.5rem 0;
-    background-color: rgba(59, 130, 246, 0.05);
+    background-color: #eff6ff;
+    font-style: italic;
+  }
+  
+  .post-content ul,
+  .post-content ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .post-content li {
+    margin: 0.5rem 0;
+  }
+  
+  .post-content hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 2px solid #e5e7eb;
+  }
+  
+  .post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  
+  .post-content th,
+  .post-content td {
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .post-content th {
+    background-color: #f9fafb;
+    font-weight: 600;
+  }
+  
+  /* Dark mode styles */
+  .dark .post-content h2 {
+    border-bottom-color: #374151;
+  }
+  
+  .dark .post-content pre {
+    border-color: #374151;
+  }
+  
+  .dark .post-content code:not(pre code) {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+  
+  .dark .post-content blockquote {
+    background-color: rgba(30, 58, 138, 0.2);
+  }
+  
+  .dark .post-content hr {
+    border-top-color: #4b5563;
+  }
+  
+  .dark .post-content th,
+  .dark .post-content td {
+    border-color: #374151;
+  }
+  
+  .dark .post-content th {
+    background-color: #1f2937;
   }
 </style>

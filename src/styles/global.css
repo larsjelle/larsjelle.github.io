@@ -148,46 +148,38 @@
     color: rgb(251 191 36);
   }
 
-  /* Enhanced prose text formatting for better readability and centering */
+  /* Enhanced prose text formatting for better readability */
   .prose {
-    text-align: center;
     text-rendering: optimizeLegibility;
     margin: 0 auto;
   }
 
-  .prose p {
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
-    max-width: 70ch;
-    margin-left: auto;
-    margin-right: auto;
+  /* Ensure code blocks and their content are properly left-aligned */
+  .prose pre,
+  .prose pre code,
+  .astro-code,
+  .astro-code code {
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
-  .prose li {
-    text-align: left;
+  /* Fix first line indentation in code blocks */
+  .prose pre code,
+  .astro-code code,
+  .prose pre,
+  .astro-code {
+    white-space: pre !important;
+    text-indent: 0 !important;
+    padding-left: 1rem !important;
   }
 
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    text-align: left;
-    max-width: none;
-  }
-
-  .prose ul, .prose ol {
-    max-width: 70ch;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-  }
-
-  .prose blockquote {
-    max-width: 70ch;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .prose pre {
-    max-width: none;
+  /* Ensure code content starts from the left edge */
+  .prose pre > code:first-child,
+  .astro-code > code:first-child {
+    display: block;
+    text-indent: 0 !important;
+    margin-left: 0 !important;
   }
 
   /* Remove top margin from first element in prose */

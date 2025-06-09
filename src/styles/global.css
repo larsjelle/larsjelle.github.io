@@ -1,3 +1,83 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base styles for enhanced dark mode code highlighting */
+@layer base {
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Shiki dual theme support for proper dark mode code highlighting */
+  @media (prefers-color-scheme: dark) {
+    .astro-code,
+    .astro-code span {
+      color: var(--shiki-dark) !important;
+      background-color: var(--shiki-dark-bg) !important;
+      /* Optional: font styles */
+      font-style: var(--shiki-dark-font-style) !important;
+      font-weight: var(--shiki-dark-font-weight) !important;
+      text-decoration: var(--shiki-dark-text-decoration) !important;
+    }
+  }
+
+  /* Class-based dark mode (for manual toggle) */
+  .dark .astro-code,
+  .dark .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    /* Optional: font styles */
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+
+  /* Enhanced code block styling */
+  .astro-code {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgb(226 232 240);
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  .dark .astro-code {
+    border-color: rgb(51 65 85);
+  }
+
+  /* External link indicators */
+  .prose a[href^="http"]:not([href*="localhost"]):not([href*="larsjelle.github.io"])::after {
+    content: " ↗";
+    color: rgb(148 163 184);
+    font-size: 0.8125rem;
+  }
+  
+  .dark .prose a[href^="http"]:not([href*="localhost"]):not([href*="larsjelle.github.io"])::after {
+    color: rgb(100 116 139);
+  }
+
+  /* Warning/Disclaimer callout styling for markdown */
+  .prose p:has(strong:first-child) {
+    background: rgb(254 252 232 / 0.8);
+    border-left: 4px solid rgb(251 191 36);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 16px 0;
+  }
+  
+  .prose p:has(strong:first-child) strong:first-child {
+    color: rgb(146 64 14);
+  }
+  
+  .dark .prose p:has(strong:first-child) {
+    background: rgb(146 64 14 / 0.2);
+    border-left-color: rgb(245 158 11);
+  }
+  
+  .dark .prose p:has(strong:first-child) strong:first-child {
+    color: rgb(251 191 36);
+  }
+}

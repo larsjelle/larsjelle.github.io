@@ -1,0 +1,226 @@
+---
+export interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+
+// Filter headings to only include h2 and h3 for better readability
+const filteredHeadings = headings.filter(heading => heading.depth >= 2 && heading.depth <= 3);
+---
+
+{filteredHeadings.length > 0 && (
+  <div class="toc-container">
+    <!-- TOC Toggle Button for Mobile -->
+    <button 
+      id="toc-toggle"
+      class="toc-toggle-btn flex items-center gap-2 w-full lg:hidden mb-4 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300"
+      aria-label="Toggle Table of Contents"
+    >
+      <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+      </svg>
+      <span id="toc-toggle-text">Show Table of Contents</span>
+      <svg id="toc-chevron" class="w-4 h-4 ml-auto transition-transform duration-200 transform rotate-0" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+    </button>
+
+    <!-- TOC Toggle Button for Desktop - Always Visible -->
+    <button 
+      id="toc-toggle-desktop"
+      class="toc-toggle-btn-desktop hidden lg:flex items-center gap-2 mb-4 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300"
+      aria-label="Toggle Table of Contents"
+    >
+      <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+      </svg>
+      <span id="toc-toggle-text-desktop">Hide TOC</span>
+      <svg id="toc-chevron-desktop" class="w-4 h-4 ml-auto transition-transform duration-200 transform rotate-180" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+    </button>
+
+    <!-- TOC Content - Can be hidden/shown -->
+    <nav id="toc-content" class="toc sticky top-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 mb-6 max-h-[75vh] overflow-y-auto hidden lg:block transition-all duration-300">
+      <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+        <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+        </svg>
+        Table of Contents
+      </h2>
+      <ul class="space-y-0.5">
+        {filteredHeadings.map((heading) => (
+          <li class={`text-xs ${heading.depth === 2 ? 'ml-0' : 'ml-2'}`}>
+            <a 
+              href={`#${heading.slug}`}
+              class={`
+                block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 
+                transition-colors duration-200 py-1 px-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800
+                ${heading.depth === 2 ? 'font-medium' : 'font-normal'}
+                leading-tight
+              `}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+)}
+
+<style>
+  .toc {
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+  
+  .toc::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  .toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .toc::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225);
+    border-radius: 2px;
+  }
+  
+  :global(.dark) .toc {
+    scrollbar-color: rgb(71 85 105) transparent;
+  }
+  
+  :global(.dark) .toc::-webkit-scrollbar-thumb {
+    background-color: rgb(71 85 105);
+  }
+  
+  @media (max-width: 1024px) {
+    .toc {
+      position: relative;
+      top: auto;
+      max-height: 50vh;
+    }
+  }
+  
+  /* Make TOC more compact on smaller screens */
+  @media (max-width: 768px) {
+    .toc {
+      max-height: 40vh;
+    }
+  }
+</style>
+
+<script>
+  // TOC toggle functionality
+  function initTOCToggle() {
+    const tocToggle = document.getElementById('toc-toggle');
+    const tocToggleDesktop = document.getElementById('toc-toggle-desktop');
+    const tocContent = document.getElementById('toc-content');
+    const tocToggleText = document.getElementById('toc-toggle-text');
+    const tocToggleTextDesktop = document.getElementById('toc-toggle-text-desktop');
+    const tocChevron = document.getElementById('toc-chevron');
+    const tocChevronDesktop = document.getElementById('toc-chevron-desktop');
+
+    // Get the parent container for layout adjustment
+    const mainContent = document.querySelector('.xl\\:grid.xl\\:grid-cols-7');
+
+    let isVisible = window.innerWidth >= 1024; // Desktop TOC is visible by default
+    
+    function updateTOCVisibility(visible) {
+      if (tocContent) {
+        if (visible) {
+          tocContent.classList.remove('hidden');
+          tocContent.classList.add('block');
+        } else {
+          tocContent.classList.add('hidden');
+          tocContent.classList.remove('block');
+        }
+      }
+      
+      // Update toggle button text and icons
+      if (tocToggleText) {
+        tocToggleText.textContent = visible ? 'Hide Table of Contents' : 'Show Table of Contents';
+      }
+      
+      if (tocToggleTextDesktop) {
+        tocToggleTextDesktop.textContent = visible ? 'Hide TOC' : 'Show TOC';
+      }
+      
+      // Update chevron rotation
+      if (tocChevron) {
+        tocChevron.classList.toggle('rotate-180', visible);
+      }
+      
+      if (tocChevronDesktop) {
+        tocChevronDesktop.classList.toggle('rotate-180', visible);
+      }
+
+      // Adjust main content layout for wider content when TOC is hidden
+      if (mainContent && window.innerWidth >= 1024) {
+        if (visible) {
+          // Show TOC: normal grid layout
+          mainContent.classList.remove('xl:grid-cols-1', 'lg:grid-cols-1');
+          mainContent.classList.add('xl:grid-cols-7', 'lg:grid-cols-5');
+        } else {
+          // Hide TOC: full width content
+          mainContent.classList.remove('xl:grid-cols-7', 'lg:grid-cols-5');
+          mainContent.classList.add('xl:grid-cols-1', 'lg:grid-cols-1');
+        }
+      }
+      
+      isVisible = visible;
+      
+      // Save preference
+      localStorage.setItem('toc-visible', visible.toString());
+    }
+    
+    // Load saved preference
+    const savedVisibility = localStorage.getItem('toc-visible');
+    if (savedVisibility !== null) {
+      isVisible = savedVisibility === 'true';
+    }
+    
+    // Apply initial state
+    updateTOCVisibility(isVisible);
+    
+    // Mobile toggle
+    if (tocToggle) {
+      tocToggle.addEventListener('click', () => {
+        updateTOCVisibility(!isVisible);
+      });
+    }
+    
+    // Desktop toggle
+    if (tocToggleDesktop) {
+      tocToggleDesktop.addEventListener('click', () => {
+        updateTOCVisibility(!isVisible);
+      });
+    }
+    
+    // Reset on window resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 1024) {
+        // Mobile: always hide TOC content, show only when toggled
+        if (tocContent) {
+          tocContent.classList.add('hidden');
+          tocContent.classList.remove('block');
+        }
+      } else {
+        // Desktop: restore saved state
+        updateTOCVisibility(isVisible);
+      }
+    });
+  }
+  
+  // Initialize when DOM is loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTOCToggle);
+  } else {
+    initTOCToggle();
+  }
+</script>

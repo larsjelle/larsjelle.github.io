@@ -37,6 +37,7 @@
   .astro-code,
   pre {
     border-radius: 0.5rem;
+    background-color: #f1f5f9 !important;
     padding: 1rem;
     border: 1px solid rgb(226 232 240);
     margin: 1.5rem 0;
@@ -48,7 +49,19 @@
 
   .dark .astro-code,
   .dark pre {
+    background-color: rgb(15 23 42) !important;
     border-color: rgb(51 65 85);
+  }
+
+  /* Ensure prose code blocks also get the correct background */
+  .prose pre,
+  .prose .astro-code {
+    background-color: #f1f5f9 !important;
+  }
+
+  .dark .prose pre,
+  .dark .prose .astro-code {
+    background-color: rgb(15 23 42) !important;
   }
 
   /* Copy button styling - works with all code blocks */

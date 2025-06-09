@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Prose from '../components/Prose.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getPostNavigation, formatDate, calculateReadingTime } from '../utils/blog';
 
@@ -14,7 +15,7 @@ const { title, date, categories, tags, excerpt, author } = post.data;
 const formattedDate = formatDate(date);
 
 // Reading time estimation
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 const wordCount = post.body.split(/\s+/g).length;
 const readingTime = calculateReadingTime(post.body);
 
@@ -23,9 +24,9 @@ const navigation = await getPostNavigation(post.slug);
 ---
 
 <BaseLayout title={title} description={excerpt}>
-  <article class="max-w-4xl mx-auto px-4 py-8">
+  <article class="max-w-7xl mx-auto px-4 py-8">
     <header class="mb-16 pb-8 border-b border-slate-200 dark:border-slate-800">
-      <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-tight mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-tight mb-6">
         {title}
       </h1>
       
@@ -62,7 +63,7 @@ const navigation = await getPostNavigation(post.slug);
       </div>
       
       {categories && categories.length > 0 && (
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3 mb-6">
           <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Filed under:</span>
           {categories.map((category) => (
             <a 
@@ -74,175 +75,210 @@ const navigation = await getPostNavigation(post.slug);
           ))}
         </div>
       )}
+
+
     </header>
     
-    <div class="prose prose-lg max-w-none dark:prose-invert
-                prose-slate 
-                prose-h1:text-3xl prose-h1:font-bold prose-h1:tracking-tight prose-h1:text-slate-900 dark:prose-h1:text-slate-100 prose-h1:scroll-mt-20
-                prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:text-slate-900 dark:prose-h2:text-slate-100 prose-h2:mt-12 prose-h2:mb-6 prose-h2:scroll-mt-20 prose-h2:border-b prose-h2:border-slate-200 dark:prose-h2:border-slate-800 prose-h2:pb-2
-                prose-h3:text-xl prose-h3:font-semibold prose-h3:tracking-tight prose-h3:text-slate-900 dark:prose-h3:text-slate-100 prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20
-                prose-h4:text-lg prose-h4:font-semibold prose-h4:tracking-tight prose-h4:text-slate-900 dark:prose-h4:text-slate-100 prose-h4:mt-8 prose-h4:mb-3 prose-h4:scroll-mt-20
-                prose-h5:text-base prose-h5:font-semibold prose-h5:tracking-tight prose-h5:text-slate-900 dark:prose-h5:text-slate-100 prose-h5:mt-6 prose-h5:mb-2
-                prose-h6:text-base prose-h6:font-medium prose-h6:tracking-tight prose-h6:text-slate-700 dark:prose-h6:text-slate-300 prose-h6:mt-6 prose-h6:mb-2
-                prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-p:leading-7
-                prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline prose-a:decoration-blue-500/30 prose-a:underline-offset-4 hover:prose-a:decoration-blue-500/60 prose-a:transition-colors
-                prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-semibold
-                prose-em:text-slate-700 dark:prose-em:text-slate-300
-                prose-code:text-slate-900 dark:prose-code:text-slate-100 prose-code:bg-slate-100 dark:prose-code:bg-slate-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
-                prose-pre:bg-slate-900 dark:prose-pre:bg-slate-950 prose-pre:text-slate-100 prose-pre:rounded-lg prose-pre:shadow-lg prose-pre:my-8 prose-pre:p-4
-                prose-blockquote:border-l-4 prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-950/30 prose-blockquote:text-slate-700 dark:prose-blockquote:text-slate-300 prose-blockquote:rounded-r-lg prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-6 prose-blockquote:italic
-                prose-ul:text-slate-700 dark:prose-ul:text-slate-300
-                prose-ol:text-slate-700 dark:prose-ol:text-slate-300
-                prose-li:text-slate-700 dark:prose-li:text-slate-300
-                prose-table:text-slate-700 dark:prose-table:text-slate-300 prose-table:border-collapse prose-table:my-8
-                prose-th:text-slate-900 dark:prose-th:text-slate-100 prose-th:bg-slate-50 dark:prose-th:bg-slate-800/50 prose-th:border prose-th:border-slate-200 dark:prose-th:border-slate-700 prose-th:px-4 prose-th:py-3 prose-th:font-semibold prose-th:text-left
-                prose-td:border prose-td:border-slate-200 dark:prose-td:border-slate-700 prose-td:px-4 prose-td:py-3
-                prose-hr:border-slate-200 dark:prose-hr:border-slate-800 prose-hr:my-12
-                prose-img:rounded-lg prose-img:shadow-lg prose-img:my-8
-                prose-figure:my-8
-                prose-figcaption:text-slate-500 dark:prose-figcaption:text-slate-400 prose-figcaption:text-center prose-figcaption:mt-2 prose-figcaption:text-sm">
-      <Content />
+    <!-- Table of Contents Toggle Controls (positioned below separator, aligned with TOC) -->
+    {headings && headings.length > 0 && (
+      <div class={`xl:gap-12 lg:gap-8 mb-6 ${headings && headings.length > 0 ? 'xl:grid xl:grid-cols-7 lg:grid lg:grid-cols-5' : ''}`}>
+        <!-- Empty space for content column alignment -->
+        <div class="xl:col-span-5 lg:col-span-4 xl:order-1 lg:order-1"></div>
+        
+        <!-- TOC Toggle Controls - aligned with TOC column -->
+        <div class="xl:col-span-2 lg:col-span-1 xl:order-2 lg:order-2">
+          <!-- TOC Toggle Button for Mobile -->
+          <button 
+            id="toc-toggle"
+            class="toc-toggle-btn flex items-center gap-2 w-full lg:hidden px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300 mb-4"
+            aria-label="Toggle Table of Contents"
+          >
+            <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+            </svg>
+            <span id="toc-toggle-text">Show Table of Contents</span>
+            <i id="toc-chevron" class="fas fa-chevron-down w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
+          </button>
+
+          <!-- TOC Toggle Button for Desktop -->
+          <button 
+            id="toc-toggle-desktop"
+            class="toc-toggle-btn-desktop hidden lg:flex items-center gap-2 w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300 mb-4"
+            aria-label="Toggle Table of Contents"
+          >
+            <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+            </svg>
+            <span id="toc-toggle-text-desktop">Hide Table of Contents</span>
+            <i id="toc-chevron-desktop" class="fas fa-chevron-up w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
+          </button>
+
+          <!-- TOC Content for Mobile (shows when toggled) -->
+          <div id="toc-content-mobile" class="toc-mobile lg:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mt-4 max-h-[50vh] overflow-y-auto">
+              <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+                </svg>
+                Table of Contents
+              </h3>
+              <ul class="space-y-1">
+                {headings.filter(heading => heading.depth >= 2 && heading.depth <= 3).map((heading) => (
+                  <li class={`text-sm ${heading.depth === 2 ? 'ml-0' : 'ml-3'}`}>
+                    <a 
+                      href={`#${heading.slug}`}
+                      class={`
+                        block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 
+                        transition-colors duration-200 py-1.5 px-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800
+                        ${heading.depth === 2 ? 'font-medium' : 'font-normal'}
+                        leading-tight
+                      `}
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Main content area with Table of Contents -->
+    <div class={`xl:gap-12 lg:gap-8 ${headings && headings.length > 0 ? 'xl:grid xl:grid-cols-7 lg:grid lg:grid-cols-5' : ''}`} id="main-content-grid">      <!-- Table of Contents - Desktop Sidebar Only -->
+      {headings && headings.length > 0 && (
+        <div class="xl:col-span-2 lg:col-span-1 xl:order-2 lg:order-2 hidden lg:block">
+          <div id="toc-desktop-wrapper" class="overflow-hidden transition-all duration-300 ease-in-out">
+            <div id="toc-content-desktop" class="toc sticky top-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 max-h-[75vh] overflow-y-auto">
+              <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+                </svg>
+                Table of Contents
+              </h3>
+              <ul class="space-y-0.5">
+                {headings.filter(heading => heading.depth >= 2 && heading.depth <= 3).map((heading) => (
+                  <li class={`text-xs ${heading.depth === 2 ? 'ml-0' : 'ml-2'}`}>
+                    <a 
+                      href={`#${heading.slug}`}
+                      class={`
+                        block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 
+                        transition-colors duration-200 py-1 px-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800
+                        ${heading.depth === 2 ? 'font-medium' : 'font-normal'}
+                        leading-tight
+                      `}
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <!-- Article content -->
+      <div class={`xl:order-1 lg:order-1 ${headings && headings.length > 0 ? 'xl:col-span-5 lg:col-span-4' : 'xl:col-span-7 lg:col-span-5'}`} id="article-content">
+        <Prose>
+          <Content />
+        </Prose>
+      </div>
     </div>
     
-    <!-- Custom styles for better content formatting -->
+    <!-- Custom styles for TOC and enhanced UI -->
     <style>
-      /* Fix spacing issues */
-      .prose ol,
-      .prose ul {
-        margin-top: 1.25em;
-        margin-bottom: 1.25em;
-      }
-      
-      .prose li {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-      }
-      
-      .prose li > p {
-        margin-top: 0.75em;
-        margin-bottom: 0.75em;
-      }
-      
-      .prose p {
-        margin-top: 1.25em;
-        margin-bottom: 1.25em;
-      }
-      
-      .prose pre {
-        margin-top: 1.7em;
-        margin-bottom: 1.7em;
-      }
-      
-      .prose pre code {
-        font-size: 0.875em;
-        line-height: 1.7;
-      }
-      
-      /* Warning/Disclaimer callout styling */
-      .prose p:has(strong:first-child) {
-        background: rgb(254 252 232 / 0.8);
-        border-left: 4px solid rgb(251 191 36);
-        padding: 12px 16px;
-        border-radius: 0 8px 8px 0;
-        margin: 24px 0;
-      }
-      
-      .prose p:has(strong:first-child) strong:first-child {
-        color: rgb(146 64 14);
-      }
-      
-      :global(.dark) .prose p:has(strong:first-child) {
-        background: rgb(146 64 14 / 0.2);
-        border-left-color: rgb(245 158 11);
-      }
-      
-      :global(.dark) .prose p:has(strong:first-child) strong:first-child {
-        color: rgb(251 191 36);
-      }
-      
-      /* Enhanced list styling */
-      .prose ul > li::marker {
-        color: rgb(148 163 184);
-      }
-      
-      .prose ol > li::marker {
-        color: rgb(148 163 184);
-        font-weight: 600;
-      }
-      
-      :global(.dark) .prose ul > li::marker,
-      :global(.dark) .prose ol > li::marker {
-        color: rgb(100 116 139);
-      }
-      
-      /* External link indicators */
-      .prose a[href^="http"]:not([href*="localhost"]):not([href*="larsjelle.github.io"])::after {
-        content: " ↗";
-        color: rgb(148 163 184);
-        font-size: 0.875rem;
-      }
-      
-      :global(.dark) .prose a[href^="http"]:not([href*="localhost"]):not([href*="larsjelle.github.io"])::after {
-        color: rgb(100 116 139);
-      }
-      
-      /* Smooth scroll behavior */
-      :global(html) {
-        scroll-behavior: smooth;
-      }
-      
-      /* Table improvements */
-      .prose table {
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-        border: 1px solid rgb(226 232 240);
-        border-radius: 8px;
+      /* TOC Show/Hide Animations */
+      .toc-visible {
+        opacity: 1;
+        max-height: 50vh;
+        transform: translateY(0);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
       }
-      
-      :global(.dark) .prose table {
-        border-color: rgb(51 65 85);
+
+      .toc-hidden {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border-width: 0 !important;
+      }
+
+      /* Desktop TOC specific animations */
+      @media (min-width: 1024px) {
+        .toc-visible {
+          max-height: 75vh;
+        }
+        
+        .toc-hidden {
+          transform: translateX(20px);
+        }
+      }
+
+      /* Button transition improvements */
+      .toc-toggle-btn,
+      .toc-toggle-btn-desktop {
+        transition: all 0.2s ease-in-out;
+      }
+
+      .toc-toggle-btn:hover,
+      .toc-toggle-btn-desktop:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      :global(.dark) .toc-toggle-btn:hover,
+      :global(.dark) .toc-toggle-btn-desktop:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Chevron rotation animation */
+      #toc-chevron,
+      #toc-chevron-desktop {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Grid layout transitions */
+      #main-content-grid {
+        transition: grid-template-columns 0.3s ease-in-out;
+      }
+
+      #article-content {
+        transition: all 0.3s ease-in-out;
+      }
+
+      /* TOC Scrollbar styling */
+      .toc {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(203 213 225) transparent;
       }
       
-      /* Code block improvements */
-      .prose pre {
-        background-color: rgb(15 23 42);
-        border: 1px solid rgb(51 65 85);
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        overflow-x: auto;
-        white-space: pre;
+      .toc::-webkit-scrollbar {
+        width: 3px;
       }
       
-      .prose pre code {
-        color: rgb(241 245 249);
-        background-color: transparent;
-        padding: 0;
-        border-radius: 0;
-        font-size: 0.875em;
-        line-height: 1.7;
-        white-space: pre;
-        word-wrap: normal;
-        overflow-wrap: normal;
+      .toc::-webkit-scrollbar-track {
+        background: transparent;
       }
       
-      /* Ensure dark mode code blocks look good */
-      :global(.dark) .prose pre {
-        background-color: rgb(2 6 23);
-        border-color: rgb(30 41 59);
+      .toc::-webkit-scrollbar-thumb {
+        background-color: rgb(203 213 225);
+        border-radius: 2px;
       }
       
-      /* Fix any potential conflicts with inline code vs code blocks */
-      .prose :not(pre) > code {
-        background-color: rgb(241 245 249);
-        color: rgb(15 23 42);
-        padding: 0.125rem 0.375rem;
-        border-radius: 0.25rem;
-        font-size: 0.875em;
-        font-weight: 500;
+      :global(.dark) .toc {
+        scrollbar-color: rgb(71 85 105) transparent;
       }
       
-      :global(.dark) .prose :not(pre) > code {
-        background-color: rgb(51 65 85);
-        color: rgb(241 245 249);
+      :global(.dark) .toc::-webkit-scrollbar-thumb {
+        background-color: rgb(71 85 105);
       }
     </style>
     
@@ -311,6 +347,182 @@ const navigation = await getPostNavigation(post.slug);
       </div>
     </nav>
   </article>
+
+  <!-- TOC Toggle JavaScript -->
+  <script>
+    // TOC toggle functionality - using exact same pattern as sidebar categories
+    function initTOCToggle() {
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocToggleDesktop = document.getElementById('toc-toggle-desktop');
+      const tocContentMobile = document.getElementById('toc-content-mobile');
+      const tocDesktopWrapper = document.getElementById('toc-desktop-wrapper');
+      const tocToggleText = document.getElementById('toc-toggle-text');
+      const tocToggleTextDesktop = document.getElementById('toc-toggle-text-desktop');
+      const tocChevron = document.getElementById('toc-chevron');
+      const tocChevronDesktop = document.getElementById('toc-chevron-desktop');
+      const mainContentGrid = document.getElementById('main-content-grid');
+      const articleContent = document.getElementById('article-content');
+
+      let isMobileVisible = false;
+      let isDesktopVisible = window.innerWidth >= 1024; // Desktop TOC is visible by default
+      
+      function updateMobileTOCVisibility(visible) {
+        if (tocContentMobile) {
+          if (visible) {
+            // Expand using the exact same pattern as sidebar categories
+            tocContentMobile.style.maxHeight = tocContentMobile.scrollHeight + 'px';
+          } else {
+            // Collapse using the exact same pattern as sidebar categories
+            tocContentMobile.style.maxHeight = '0px';
+          }
+        }
+        
+        // Update toggle button text
+        if (tocToggleText) {
+          tocToggleText.textContent = visible ? 'Hide Table of Contents' : 'Show Table of Contents';
+        }
+        
+        // Update chevron using exact same pattern as sidebar categories
+        if (tocChevron) {
+          if (visible) {
+            tocChevron.classList.remove('fa-chevron-down');
+            tocChevron.classList.add('fa-chevron-up');
+          } else {
+            tocChevron.classList.remove('fa-chevron-up');
+            tocChevron.classList.add('fa-chevron-down');
+          }
+        }
+        
+        isMobileVisible = visible;
+        localStorage.setItem('toc-mobile-visible', visible.toString());
+      }
+
+      function updateDesktopTOCVisibility(visible) {
+        if (tocDesktopWrapper) {
+          if (visible) {
+            // Show with smooth animation using maxWidth and opacity
+            tocDesktopWrapper.style.maxWidth = 'none';
+            tocDesktopWrapper.style.opacity = '1';
+          } else {
+            // Hide with smooth animation using maxWidth and opacity
+            tocDesktopWrapper.style.maxWidth = '0px';
+            tocDesktopWrapper.style.opacity = '0';
+          }
+        }
+        
+        // Update toggle button text
+        if (tocToggleTextDesktop) {
+          tocToggleTextDesktop.textContent = visible ? 'Hide Table of Contents' : 'Show Table of Contents';
+        }
+        
+        // Update chevron using exact same pattern as sidebar categories
+        if (tocChevronDesktop) {
+          if (visible) {
+            tocChevronDesktop.classList.remove('fa-chevron-down');
+            tocChevronDesktop.classList.add('fa-chevron-up');
+          } else {
+            tocChevronDesktop.classList.remove('fa-chevron-up');
+            tocChevronDesktop.classList.add('fa-chevron-down');
+          }
+        }
+
+        // Adjust main content layout
+        if (mainContentGrid && window.innerWidth >= 1024) {
+          if (visible) {
+            // Show TOC: normal grid layout
+            mainContentGrid.classList.remove('xl:grid-cols-1', 'lg:grid-cols-1');
+            mainContentGrid.classList.add('xl:grid-cols-7', 'lg:grid-cols-5');
+            if (articleContent) {
+              articleContent.classList.remove('xl:col-span-7', 'lg:col-span-5');
+              articleContent.classList.add('xl:col-span-5', 'lg:col-span-4');
+            }
+          } else {
+            // Hide TOC: full width content
+            mainContentGrid.classList.remove('xl:grid-cols-7', 'lg:grid-cols-5');
+            mainContentGrid.classList.add('xl:grid-cols-1', 'lg:grid-cols-1');
+            if (articleContent) {
+              articleContent.classList.remove('xl:col-span-5', 'lg:col-span-4');
+              articleContent.classList.add('xl:col-span-7', 'lg:col-span-5');
+            }
+          }
+        }
+        
+        isDesktopVisible = visible;
+        localStorage.setItem('toc-desktop-visible', visible.toString());
+      }
+      
+      // Load saved preferences
+      const savedMobileVisibility = localStorage.getItem('toc-mobile-visible');
+      if (savedMobileVisibility !== null) {
+        isMobileVisible = savedMobileVisibility === 'true';
+      }
+
+      const savedDesktopVisibility = localStorage.getItem('toc-desktop-visible');
+      if (savedDesktopVisibility !== null) {
+        isDesktopVisible = savedDesktopVisibility === 'true';
+      }
+      
+      // Apply initial states
+      updateMobileTOCVisibility(isMobileVisible);
+      updateDesktopTOCVisibility(isDesktopVisible);
+      
+      // Mobile toggle - using exact same event handling pattern as sidebar categories
+      if (tocToggle && tocContentMobile && tocChevron) {
+        tocToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const isExpanded = tocContentMobile.style.maxHeight && tocContentMobile.style.maxHeight !== '0px';
+          
+          if (isExpanded) {
+            // Collapse - exact same pattern as sidebar
+            tocContentMobile.style.maxHeight = '0px';
+            tocChevron.classList.remove('fa-chevron-up');
+            tocChevron.classList.add('fa-chevron-down');
+            if (tocToggleText) {
+              tocToggleText.textContent = 'Show Table of Contents';
+            }
+            isMobileVisible = false;
+          } else {
+            // Expand - exact same pattern as sidebar
+            tocContentMobile.style.maxHeight = tocContentMobile.scrollHeight + 'px';
+            tocChevron.classList.remove('fa-chevron-down');
+            tocChevron.classList.add('fa-chevron-up');
+            if (tocToggleText) {
+              tocToggleText.textContent = 'Hide Table of Contents';
+            }
+            isMobileVisible = true;
+          }
+          
+          localStorage.setItem('toc-mobile-visible', isMobileVisible.toString());
+        });
+      }
+      
+      // Desktop toggle
+      if (tocToggleDesktop) {
+        tocToggleDesktop.addEventListener('click', () => {
+          updateDesktopTOCVisibility(!isDesktopVisible);
+        });
+      }
+      
+      // Reset on window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth < 1024) {
+          // Mobile: restore mobile state
+          updateMobileTOCVisibility(isMobileVisible);
+        } else {
+          // Desktop: restore desktop state
+          updateDesktopTOCVisibility(isDesktopVisible);
+        }
+      });
+    }
+    
+    // Initialize when DOM is loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTOCToggle);
+    } else {
+      initTOCToggle();
+    }
+  </script>
 </BaseLayout>
 
 

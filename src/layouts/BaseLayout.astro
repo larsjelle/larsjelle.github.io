@@ -167,7 +167,7 @@ const siteConfig = {
     
     <div id="main" class="main lg:ml-64 min-h-screen flex flex-col">
       <div class="topbar bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 lg:hidden sticky top-0 z-30">
-        <div class="flex items-center justify-between max-w-full">
+        <div class="flex items-center justify-between w-full">
           <button 
             id="sidebar-toggle" 
             class="flex items-center justify-center w-10 h-10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
@@ -176,16 +176,34 @@ const siteConfig = {
             <i class="fas fa-bars text-lg"></i>
           </button>
           
-          <div class="flex items-center space-x-2 min-w-0 flex-1 justify-center">
-            <span class="text-lg font-semibold text-gray-900 dark:text-white truncate">
+          <div class="flex items-center justify-center flex-1">
+            <span class="text-lg font-semibold text-gray-900 dark:text-white">
               {siteConfig.title}
             </span>
           </div>
           
-          <div class="w-10 h-10"></div> <!-- Spacer for centering -->
+          <!-- Dark Mode Toggle for Mobile -->
+          <button 
+            id="theme-toggle-btn-topbar"
+            class="flex items-center justify-center w-10 h-10 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+            aria-label="Toggle dark mode"
+          >
+            <i class="fas fa-moon text-lg dark:hidden"></i>
+            <i class="fas fa-sun text-lg hidden dark:block"></i>
+          </button>
         </div>
       </div>
       
+      <!-- Floating Dark Mode Toggle for Desktop -->
+      <button 
+        id="theme-toggle-btn-desktop"
+        class="hidden lg:flex fixed top-6 right-6 z-40 items-center justify-center w-12 h-12 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl"
+        aria-label="Toggle dark mode"
+      >
+        <i class="fas fa-moon text-lg dark:hidden"></i>
+        <i class="fas fa-sun text-lg hidden dark:block"></i>
+      </button>
+
       <div class="content flex-1 p-4 sm:p-6">
         <slot />
       </div>
@@ -197,8 +215,34 @@ const siteConfig = {
     
     <script>
       // Theme toggle functionality
-      const themeToggle = document.getElementById('theme-toggle');
       const html = document.documentElement;
+      
+      // Get all theme toggle buttons
+      const themeToggleTopbar = document.getElementById('theme-toggle-btn-topbar');
+      const themeToggleDesktop = document.getElementById('theme-toggle-btn-desktop');
+      
+      // Theme toggle function
+      function toggleTheme() {
+        const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        if (newTheme === 'dark') {
+          html.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
+        }
+        
+        localStorage.setItem('theme', newTheme);
+      }
+      
+      // Add event listeners to all theme toggle buttons
+      if (themeToggleTopbar) {
+        themeToggleTopbar.addEventListener('click', toggleTheme);
+      }
+      
+      if (themeToggleDesktop) {
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+      }
       
       // Mobile sidebar toggle
       const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -282,15 +326,19 @@ const siteConfig = {
         });
       }
       
-      // Theme persistence
+      // Theme persistence - Load saved theme on page load
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme) {
-        html.setAttribute('data-theme', savedTheme);
         if (savedTheme === 'dark') {
           html.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
         }
       } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
       }
     </script>
   </body>

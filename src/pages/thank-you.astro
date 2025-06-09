@@ -1,0 +1,91 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout 
+  title="Thank You!"
+  description="Thank you for your generous support! Your donation helps keep this blog running and content flowing."
+>
+  <div class="max-w-2xl mx-auto text-center">
+    <!-- Success Icon -->
+    <div class="mb-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+        <svg class="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Thank You Message -->
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+      Thank You! ☕
+    </h1>
+
+    <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+      Your generous support means the world to me! Your donation helps cover hosting costs, 
+      development tools, and the countless hours I spend creating content for this blog. 
+      Every cup of coffee counts! 🙏
+    </p>
+
+    <!-- Additional Message -->
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-yellow-800 dark:text-yellow-200 mb-3">
+        What happens next?
+      </h2>
+      <p class="text-yellow-700 dark:text-yellow-300">
+        You'll receive a confirmation email from PayPal shortly. Your support directly helps me continue 
+        writing about technology, cybersecurity, and development best practices. Stay tuned for more awesome content!
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a 
+        href="/"
+        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+      >
+        <i class="fas fa-home mr-2"></i>
+        Back to Home
+      </a>
+      
+      <a 
+        href="/posts"
+        class="inline-flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors duration-200"
+      >
+        <i class="fas fa-book-open mr-2"></i>
+        Read Latest Posts
+      </a>
+    </div>
+
+    <!-- Social Sharing -->
+    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+        Know someone who might enjoy this blog?
+      </p>
+      
+      <div class="flex justify-center space-x-4">
+        <a 
+          href="https://twitter.com/intent/tweet?text=Just%20discovered%20this%20awesome%20tech%20blog!&url=https://larsjelle.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-400 hover:text-blue-400 transition-colors"
+          aria-label="Share on Twitter"
+        >
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        
+        <a 
+          href="https://www.linkedin.com/sharing/share-offsite/?url=https://larsjelle.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-400 hover:text-blue-600 transition-colors"
+          aria-label="Share on LinkedIn"
+        >
+          <i class="fab fa-linkedin text-xl"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</PageLayout>

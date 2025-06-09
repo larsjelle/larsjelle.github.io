@@ -1,0 +1,108 @@
+---
+// PayPal Donation Button Component
+// This component creates a "Buy Me a Coffee" style PayPal donation button
+
+export interface Props {
+  /** Button text */
+  buttonText?: string;
+  /** Button style variant */
+  variant?: 'sidebar' | 'floating' | 'inline';
+  /** Custom CSS classes */
+  class?: string;
+  /** PayPal.me URL */
+  paypalUrl?: string;
+}
+
+const { 
+  buttonText = "Buy me a coffee",
+  variant = "sidebar",
+  class: additionalClasses = "",
+  paypalUrl = "https://www.paypal.com/paypalme/larsjelle"
+} = Astro.props;
+
+// Generate base button styles based on variant
+const getButtonStyles = (variant: string) => {
+  const baseStyles = "inline-flex items-center gap-2 font-medium transition-all duration-200 text-center no-underline";
+  
+  switch (variant) {
+    case 'sidebar':
+      return `${baseStyles} px-3 py-2 text-sm bg-yellow-400 hover:bg-yellow-500 text-yellow-900 rounded-lg shadow-sm hover:shadow-md transform hover:scale-105`;
+    
+    case 'floating':
+      return `${baseStyles} fixed bottom-6 right-6 z-40 px-4 py-3 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110`;
+    
+    case 'inline':
+      return `${baseStyles} px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 rounded-lg shadow-sm hover:shadow-md`;
+    
+    default:
+      return `${baseStyles} px-3 py-2 text-sm bg-yellow-400 hover:bg-yellow-500 text-yellow-900 rounded-lg shadow-sm hover:shadow-md`;
+  }
+};
+
+const buttonClasses = `${getButtonStyles(variant)} ${additionalClasses}`;
+---
+
+<!-- PayPal Donation Link -->
+<a 
+  href={paypalUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  class={buttonClasses}
+  title={buttonText}
+  aria-label="Donate via PayPal"
+>
+  <!-- Coffee icon -->
+  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M2,21H20V19H2M20,8H18V5H4V8H2V10A4,4 0 0,0 6,14H18A4,4 0 0,0 22,10V8M16,5V8H6V5M6,10H18A2,2 0 0,1 2,12A2,2 0 0,1 0,10"/>
+  </svg>
+  
+  <span class="donation-text">{buttonText}</span>
+</a>
+
+<style>
+  /* Enhanced link styles */
+  .paypal-donation-form a,
+  a {
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+  
+  /* Ripple effect on click */
+  .paypal-donation-form a::before,
+  a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .paypal-donation-form a:active::before,
+  a:active::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Dark mode adjustments for better contrast */
+  :global(.dark) a {
+    background: rgb(254 240 138) !important; /* yellow-200 */
+    color: rgb(133 77 14) !important; /* yellow-800 */
+  }
+  
+  :global(.dark) a:hover {
+    background: rgb(253 230 138) !important; /* yellow-300 */
+  }
+  
+  /* Responsive text hiding for very small screens */
+  @media (max-width: 320px) {
+    .donation-text {
+      display: none;
+    }
+  }
+</style>

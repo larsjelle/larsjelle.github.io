@@ -24,8 +24,9 @@ const navigation = await getPostNavigation(post.slug);
 ---
 
 <BaseLayout title={title} description={excerpt}>
-  <article class="max-w-7xl mx-auto px-4 py-8">
-    <header class="mb-16 pb-8 border-b border-slate-200 dark:border-slate-800">
+  <article class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="mb-6 pb-6 border-b border-slate-200 dark:border-slate-800">
       <h1 class="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-tight mb-6">
         {title}
       </h1>
@@ -75,35 +76,70 @@ const navigation = await getPostNavigation(post.slug);
           ))}
         </div>
       )}
-
-
     </header>
     
-    <!-- Table of Contents Toggle Controls (positioned below separator, aligned with TOC) -->
+    <!-- Table of Contents Toggle for Mobile -->
     {headings && headings.length > 0 && (
-      <div class={`xl:gap-12 lg:gap-8 mb-6 ${headings && headings.length > 0 ? 'xl:grid xl:grid-cols-7 lg:grid lg:grid-cols-5' : ''}`}>
-        <!-- Empty space for content column alignment -->
-        <div class="xl:col-span-5 lg:col-span-4 xl:order-1 lg:order-1"></div>
-        
-        <!-- TOC Toggle Controls - aligned with TOC column -->
-        <div class="xl:col-span-2 lg:col-span-1 xl:order-2 lg:order-2">
-          <!-- TOC Toggle Button for Mobile -->
-          <button 
-            id="toc-toggle"
-            class="toc-toggle-btn flex items-center gap-2 w-full lg:hidden px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300 mb-4"
-            aria-label="Toggle Table of Contents"
-          >
-            <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
-            </svg>
-            <span id="toc-toggle-text">Show Table of Contents</span>
-            <i id="toc-chevron" class="fas fa-chevron-down w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
-          </button>
+      <div class="mb-4 lg:hidden">
+        <button 
+          id="toc-toggle"
+          class="toc-toggle-btn flex items-center gap-2 w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300"
+          aria-label="Toggle Table of Contents"
+        >
+          <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v-2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+          </svg>
+          <span id="toc-toggle-text">Show Table of Contents</span>
+          <i id="toc-chevron" class="fas fa-chevron-down w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
+        </button>
 
+        <!-- TOC Content for Mobile -->
+        <div id="toc-content-mobile" class="toc-mobile overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mt-4 max-h-[50vh] overflow-y-auto">
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+              </svg>
+              Table of Contents
+            </h3>
+            <ul class="space-y-1">
+              {headings.filter(heading => heading.depth >= 2 && heading.depth <= 3).map((heading) => (
+                <li class={`text-sm ${heading.depth === 2 ? 'ml-0' : 'ml-3'}`}>
+                  <a 
+                    href={`#${heading.slug}`}
+                    class={`
+                      block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 
+                      transition-colors duration-200 py-1.5 px-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800
+                      ${heading.depth === 2 ? 'font-medium' : 'font-normal'}
+                      leading-tight
+                    `}
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Main content area with side-by-side layout for desktop -->
+    <div class={`${headings && headings.length > 0 ? 'lg:flex lg:gap-8' : ''}`} id="main-content-area">
+      <!-- Article content -->
+      <div class={`${headings && headings.length > 0 ? 'lg:flex-1' : ''}`} id="article-content">
+        <Prose>
+          <Content />
+        </Prose>
+      </div>
+
+      <!-- Table of Contents - Desktop Sidebar -->
+      {headings && headings.length > 0 && (
+        <div class="hidden lg:block lg:w-64 lg:flex-shrink-0" id="desktop-toc-sidebar">
           <!-- TOC Toggle Button for Desktop -->
           <button 
             id="toc-toggle-desktop"
-            class="toc-toggle-btn-desktop hidden lg:flex items-center gap-2 w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300 mb-4"
+            class="toc-toggle-btn-desktop flex items-center gap-2 w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-700 dark:text-slate-300 mb-4"
             aria-label="Toggle Table of Contents"
           >
             <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
@@ -113,42 +149,6 @@ const navigation = await getPostNavigation(post.slug);
             <i id="toc-chevron-desktop" class="fas fa-chevron-up w-3 text-gray-400 transition-transform duration-200 ml-auto"></i>
           </button>
 
-          <!-- TOC Content for Mobile (shows when toggled) -->
-          <div id="toc-content-mobile" class="toc-mobile lg:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mt-4 max-h-[50vh] overflow-y-auto">
-              <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
-                <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
-                </svg>
-                Table of Contents
-              </h3>
-              <ul class="space-y-1">
-                {headings.filter(heading => heading.depth >= 2 && heading.depth <= 3).map((heading) => (
-                  <li class={`text-sm ${heading.depth === 2 ? 'ml-0' : 'ml-3'}`}>
-                    <a 
-                      href={`#${heading.slug}`}
-                      class={`
-                        block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 
-                        transition-colors duration-200 py-1.5 px-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800
-                        ${heading.depth === 2 ? 'font-medium' : 'font-normal'}
-                        leading-tight
-                      `}
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-
-    <!-- Main content area with Table of Contents -->
-    <div class={`xl:gap-12 lg:gap-8 ${headings && headings.length > 0 ? 'xl:grid xl:grid-cols-7 lg:grid lg:grid-cols-5' : ''}`} id="main-content-grid">      <!-- Table of Contents - Desktop Sidebar Only -->
-      {headings && headings.length > 0 && (
-        <div class="xl:col-span-2 lg:col-span-1 xl:order-2 lg:order-2 hidden lg:block">
           <div id="toc-desktop-wrapper" class="overflow-hidden transition-all duration-300 ease-in-out">
             <div id="toc-content-desktop" class="toc sticky top-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 max-h-[75vh] overflow-y-auto">
               <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
@@ -178,13 +178,6 @@ const navigation = await getPostNavigation(post.slug);
           </div>
         </div>
       )}
-      
-      <!-- Article content -->
-      <div class={`xl:order-1 lg:order-1 ${headings && headings.length > 0 ? 'xl:col-span-5 lg:col-span-4' : 'xl:col-span-7 lg:col-span-5'}`} id="article-content">
-        <Prose>
-          <Content />
-        </Prose>
-      </div>
     </div>
     
     <!-- Custom styles for TOC and enhanced UI -->

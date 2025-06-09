@@ -3,24 +3,24 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 
 <PageLayout title="About" description="Learn more about Lars van Blitterswijk">
-  <div class="space-y-6">
+  <div class="space-y-6 sm:space-y-8">
     <div class="profile-section">
-      <div class="flex items-center space-x-6 mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-8 mb-6">
         <img 
           src="/img/avatar.jpg" 
           alt="Lars van Blitterswijk" 
-          class="w-64 h-64 rounded-lg object-cover shadow-lg"
+          class="w-52 h-52 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-lg object-cover shadow-lg mx-auto sm:mx-0 flex-shrink-0"
         />
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Lars van Blitterswijk</h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400">Tech and Security Enthusiast</p>
+        <div class="text-left">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-0">Lars van Blitterswijk</h2>
+          <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 -mt-1">Tech and Security Enthusiast</p>
         </div>
       </div>
     </div>
 
     <div class="bio-section">
-      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">About Me</h3>
-      <div class="space-y-4 text-gray-700 dark:text-gray-300">
+      <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">About Me</h3>
+      <div class="space-y-3 sm:space-y-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
         <p>
           Welcome! My name is Lars and this is my corner of the digital realm. 
           I spend my days weaving security into the fabric of technology, 
@@ -36,44 +36,44 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
 
     <div class="interests-section">
-      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Interests & Expertise</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="interest-card bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-          <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+      <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Interests & Expertise</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div class="interest-card bg-blue-50 dark:bg-blue-900/20 p-3 sm:p-4 rounded-lg border border-blue-100 dark:border-blue-800/30 hover:shadow-md transition-all duration-200">
+          <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-2 text-sm sm:text-base">
             <i class="fas fa-shield-alt mr-2"></i>
             Cybersecurity
           </h4>
-          <p class="text-sm text-blue-700 dark:text-blue-300">
+          <p class="text-xs sm:text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
             Digital defense strategies, threat analysis, and security architecture
           </p>
         </div>
         
-        <div class="interest-card bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-          <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">
+        <div class="interest-card bg-green-50 dark:bg-green-900/20 p-3 sm:p-4 rounded-lg border border-green-100 dark:border-green-800/30 hover:shadow-md transition-all duration-200">
+          <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2 text-sm sm:text-base">
             <i class="fas fa-code mr-2"></i>
             Software Development
           </h4>
-          <p class="text-sm text-green-700 dark:text-green-300">
+          <p class="text-xs sm:text-sm text-green-700 dark:text-green-300 leading-relaxed">
             Modern web technologies, TypeScript, and system architecture
           </p>
         </div>
         
-        <div class="interest-card bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-          <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+        <div class="interest-card bg-purple-50 dark:bg-purple-900/20 p-3 sm:p-4 rounded-lg border border-purple-100 dark:border-purple-800/30 hover:shadow-md transition-all duration-200">
+          <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2 text-sm sm:text-base">
             <i class="fas fa-network-wired mr-2"></i>
             Infrastructure
           </h4>
-          <p class="text-sm text-purple-700 dark:text-purple-300">
+          <p class="text-xs sm:text-sm text-purple-700 dark:text-purple-300 leading-relaxed">
             Cloud architecture, DevOps practices, and system administration
           </p>
         </div>
         
-        <div class="interest-card bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
-          <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+        <div class="interest-card bg-orange-50 dark:bg-orange-900/20 p-3 sm:p-4 rounded-lg border border-orange-100 dark:border-orange-800/30 hover:shadow-md transition-all duration-200">
+          <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2 text-sm sm:text-base">
             <i class="fas fa-lightbulb mr-2"></i>
             Innovation
           </h4>
-          <p class="text-sm text-orange-700 dark:text-orange-300">
+          <p class="text-xs sm:text-sm text-orange-700 dark:text-orange-300 leading-relaxed">
             Emerging technologies, AI/ML applications, and digital transformation
           </p>
         </div>
@@ -81,46 +81,46 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
 
     <div class="contact-section">
-      <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Get In Touch</h3>
-      <div class="flex flex-wrap gap-4">
+      <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Get In Touch</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-3 sm:gap-4">
         <a 
           href="https://github.com/larsjelle" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-2 rounded-lg hover:bg-opacity-60 transition-all"
+          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-3 rounded-lg hover:bg-opacity-60 transition-all duration-200 text-center sm:text-left touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
         >
-          <i class="fab fa-github mr-2"></i>
-          GitHub
+          <i class="fab fa-github mr-2 text-base"></i>
+          <span class="text-sm sm:text-base">GitHub</span>
         </a>
         
         <a 
           href="https://twitter.com/Larsjelle18" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-2 rounded-lg hover:bg-opacity-60 transition-all"
+          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-3 rounded-lg hover:bg-opacity-60 transition-all duration-200 text-center sm:text-left touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
         >
           <svg class="inline w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
-          Twitter/X
+          <span class="text-sm sm:text-base">Twitter/X</span>
         </a>
         
         <a 
           href="https://www.linkedin.com/in/lars-van-blitterswijk/" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-2 rounded-lg hover:bg-opacity-60 transition-all"
+          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-3 rounded-lg hover:bg-opacity-60 transition-all duration-200 text-center sm:text-left touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
         >
-          <i class="fab fa-linkedin mr-2"></i>
-          LinkedIn
+          <i class="fab fa-linkedin mr-2 text-base"></i>
+          <span class="text-sm sm:text-base">LinkedIn</span>
         </a>
         
         <a 
           href="mailto:contact@larsjelle.nl"
-          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-2 rounded-lg hover:bg-opacity-60 transition-all"
+          class="contact-link bg-gray-500 bg-opacity-40 text-white no-underline px-4 py-3 rounded-lg hover:bg-opacity-60 transition-all duration-200 text-center sm:text-left touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
         >
-          <i class="fas fa-envelope mr-2"></i>
-          Email
+          <i class="fas fa-envelope mr-2 text-base"></i>
+          <span class="text-sm sm:text-base">Email</span>
         </a>
       </div>
     </div>

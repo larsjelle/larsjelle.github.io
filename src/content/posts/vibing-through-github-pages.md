@@ -1,6 +1,6 @@
 ---
 title: Vibing through GitHub Pages
-date: 2025-01-08
+date: 2025-06-09
 categories: 
   - Tech
 tags: 

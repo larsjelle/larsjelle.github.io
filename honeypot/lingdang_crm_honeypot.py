@@ -16,21 +16,52 @@ import json
 import time
 import logging
 import random
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, request, jsonify, render_template_string
 from werkzeug.serving import run_simple
 import config
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Setup logging
-logging.basicConfig(
-    filename=config.LOG_FILE,
-    level=getattr(logging, config.LOG_LEVEL),
-    format=config.LOG_FORMAT,
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
+# Ensure log directory exists before configuring logging
+log_dir = os.path.dirname(config.LOG_FILE)
+if log_dir:
+    os.makedirs(log_dir, exist_ok=True)
+
+# Setup logging (strip ANSI sequences from any incoming logs e.g., Werkzeug)
+class NoAnsiFormatter(logging.Formatter):
+    _ansi_re = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+    def format(self, record: logging.LogRecord) -> str:
+        # Clean message and any args
+        try:
+            record.msg = self._ansi_re.sub('', str(record.msg))
+            if record.args:
+                if isinstance(record.args, tuple):
+                    record.args = tuple(self._ansi_re.sub('', str(a)) for a in record.args)
+                elif isinstance(record.args, dict):
+                    record.args = {k: self._ansi_re.sub('', str(v)) for k, v in record.args.items()}
+        except Exception:
+            # Best-effort cleanup; never break logging
+            pass
+        return super().format(record)
+
+root_logger = logging.getLogger()
+root_logger.handlers.clear()
+root_logger.setLevel(getattr(logging, config.LOG_LEVEL))
+
+file_handler = logging.FileHandler(config.LOG_FILE)
+file_handler.setLevel(getattr(logging, config.LOG_LEVEL))
+file_handler.setFormatter(NoAnsiFormatter(config.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S'))
+root_logger.addHandler(file_handler)
+
+# Ensure Werkzeug logs propagate to our handler without their own formatting
+werk_logger = logging.getLogger('werkzeug')
+werk_logger.handlers.clear()
+werk_logger.propagate = True
+werk_logger.setLevel(getattr(logging, config.LOG_LEVEL))
 logger = logging.getLogger(__name__)
 
 class AttackDetector:
@@ -74,7 +105,7 @@ class AttackDetector:
     def log_attack(self, request_data, is_attack, patterns, delay_applied=0):
         """Log attack attempt with details"""
         log_entry = {
-            'timestamp': datetime.utcnow().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'ip_address': request_data.get('remote_addr'),
             'user_agent': request_data.get('user_agent'),
             'method': request_data.get('method'),

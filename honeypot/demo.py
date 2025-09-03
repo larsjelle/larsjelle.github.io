@@ -1,4 +1,31 @@
 #!/usr/bin/env python3
+"""Minimal smoke test to ensure the honeypot app initializes and routes respond."""
+
+from lingdang_crm_honeypot import app
+
+
+def smoke_test():
+    client = app.test_client()
+
+    # Test root
+    r = client.get('/crm/')
+    assert r.status_code == 200
+
+    # Test vulnerable endpoint normal request
+    r = client.get('/crm/crmapi/erp/tabdetail_moduleSave.php', query_string={'getvaluestring': 'ok'})
+    assert r.status_code == 200
+
+    # Test stats endpoint
+    r = client.get('/stats')
+    assert r.status_code == 200
+    assert 'honeypot_version' in r.json
+
+    print('Smoke test passed')
+
+
+if __name__ == '__main__':
+    smoke_test()
+#!/usr/bin/env python3
 """
 Demonstration script for Lingdang CRM SQL Injection Honeypot
 

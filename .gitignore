@@ -12,6 +12,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# honeypot logs
+honeypot/logs/
+honeypot/__pycache__/
+
 
 # environment variables
 .env

@@ -37,7 +37,19 @@ const siteConfig = {
     linkedin: "https://www.linkedin.com/in/lars-van-blitterswijk/",
     instagram: "https://www.instagram.com/larsjelle/"
   },
-  avatar: "/img/avatar.jpg"
+  avatar: "/img/avatar.jpg",
+  // Toggle the blog (home, categories, tags, archives, search) on/off.
+  // Disabled until a new blog is built; pages live in src/pages-disabled/.
+  blogEnabled: false,
+  // Toggle the "Buy me a coffee" donation button in the sidebar
+  showDonationButton: false,
+  // Toggle individual social links in the sidebar
+  socialVisibility: {
+    github: true,
+    twitter: false,
+    linkedin: true,
+    instagram: false
+  }
 };
 ---
 
@@ -81,20 +93,23 @@ const siteConfig = {
       
       <nav class="nav p-4 flex-1 overflow-y-auto">
         <ul class="nav-list space-y-2">
-          <li class="nav-item">
-            <a href="/" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <i class="fas fa-home w-5"></i>
-              <span>Home</span>
-            </a>
-          </li>
+          {siteConfig.blogEnabled && (
+            <li class="nav-item">
+              <a href="/" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-home w-5"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          )}
           <li class="nav-item">
             <a href="/about" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
               <i class="fas fa-user w-5"></i>
               <span>About</span>
             </a>
           </li>
+          {siteConfig.blogEnabled && (
           <li class="nav-item">
-            <button 
+            <button
               id="categories-toggle"
               class="categories-toggle w-full nav-link flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
@@ -143,38 +158,48 @@ const siteConfig = {
               <span>Search</span>
             </a>
           </li>
+          )}
         </ul>
       </nav>
       
       <div class="sidebar-bottom mt-auto p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
         <!-- Support Section -->
-        <div class="support-section mb-4 text-center">
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
-            Enjoying the content?
-          </p>
-          <PayPalDonation 
-            paypalEmail="your-paypal@email.com"
-            buttonText="Buy me a coffee"
-            variant="sidebar"
-          />
-        </div>
+        {siteConfig.showDonationButton && (
+          <div class="support-section mb-4 text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              Enjoying the content?
+            </p>
+            <PayPalDonation
+              buttonText="Buy me a coffee"
+              variant="sidebar"
+            />
+          </div>
+        )}
         
         <!-- Social Links -->
         <div class="social-links flex justify-center space-x-3 sm:space-x-4">
-          <a href={`https://github.com/${siteConfig.social.github}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
-            <i class="fab fa-github text-lg sm:text-xl"></i>
-          </a>
-          <a href={`https://twitter.com/${siteConfig.social.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
-            <svg class="x-logo w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
-            <i class="fab fa-linkedin text-lg sm:text-xl"></i>
-          </a>
-          <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
-            <i class="fab fa-instagram text-lg sm:text-xl"></i>
-          </a>
+          {siteConfig.socialVisibility.github && (
+            <a href={`https://github.com/${siteConfig.social.github}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
+              <i class="fab fa-github text-lg sm:text-xl"></i>
+            </a>
+          )}
+          {siteConfig.socialVisibility.twitter && (
+            <a href={`https://twitter.com/${siteConfig.social.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
+              <svg class="x-logo w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          )}
+          {siteConfig.socialVisibility.linkedin && (
+            <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
+              <i class="fab fa-linkedin text-lg sm:text-xl"></i>
+            </a>
+          )}
+          {siteConfig.socialVisibility.instagram && (
+            <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="social-link text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 flex items-center justify-center">
+              <i class="fab fa-instagram text-lg sm:text-xl"></i>
+            </a>
+          )}
         </div>
       </div>
     </div>

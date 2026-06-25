@@ -9,6 +9,10 @@ export default defineConfig({
   site: 'https://larsjelle.github.io',
   output: 'static',
   adapter: undefined,
+  // Blog is disabled for now; send the site root to the About page.
+  redirects: {
+    '/': '/about'
+  },
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {

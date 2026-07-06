@@ -18,7 +18,7 @@ const onHome = Astro.url.pathname === "/";
 const p = onHome ? "" : "/";
 const navLinks = [
   { key: "about", label: "about", href: `${p}#about` },
-  { key: "work", label: "work", href: `${p}#work` },
+  { key: "skills", label: "skills", href: `${p}#skills` },
   { key: "posts", label: "posts", href: "/posts" },
   { key: "contact", label: "contact", href: `${p}#contact` },
 ];
@@ -253,14 +253,6 @@ const navLinks = [
       .panel-body ul { list-style: none; margin: 0; padding: 0; }
       .panel-body li { color: var(--dim); font-size: 0.9rem; padding: 0.15rem 0; }
       .li-mark { color: var(--green); margin-right: 0.5rem; }
-
-      /* ---- selected work ---- */
-      .work-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
-      .work-item { display: flex; align-items: baseline; gap: 1rem; padding: 0.55rem 0.9rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg-elev); transition: border-color 0.2s ease; }
-      .work-item:hover { border-color: rgba(70,227,154,0.35); }
-      .work-key { color: var(--green); font-size: 0.78rem; min-width: 6.5rem; white-space: nowrap; }
-      .work-key::before { content: "▸ "; color: var(--dim); }
-      .work-text { color: var(--dim); font-size: 0.9rem; }
 
       /* ---- timeline ---- */
       .timeline { list-style: none; margin: 0; padding: 0; position: relative; }

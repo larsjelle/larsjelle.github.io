@@ -9,12 +9,6 @@ const skills = [
   { id: "agile", title: "Agile Way of Working", items: ["Scrum Master & Product Owner experience", "Iterative, team-based delivery", "Cross-functional collaboration"] },
 ];
 
-const work = [
-  { key: "agents", text: "AI agents & RAG systems wired into internal platforms" },
-  { key: "threat-hunt", text: "A manual threat-hunting routine rebuilt as an automated n8n workflow" },
-  { key: "soar", text: "Product owner (~1 yr) for an in-house SOAR platform" },
-];
-
 const experience = [
   { tag: "current", role: "AI Automation Engineer", detail: "Designing AI agents, RAG systems and n8n workflows that connect in-house platforms and automate security and business processes." },
   { tag: "prev", role: "Product Owner — in-house SOAR", detail: "Owned the roadmap for an internal Security Orchestration, Automation & Response platform. Scrum Master experience alongside." },
@@ -44,7 +38,7 @@ const experience = [
             <noscript>
               <div class="term-line"><span class="out"><span class="hl">Lars van Blitterswijk</span> :: <span class="ok">AI Automation Engineer</span></span></div>
               <div class="term-line"><span class="out">I build AI-driven automation that connects systems and removes manual work.</span></div>
-              <div class="term-line"><span class="out">Scroll down for skills, work, experience and contact.</span></div>
+              <div class="term-line"><span class="out">Scroll down for skills, experience and contact.</span></div>
             </noscript>
           </div>
           <div class="term-input-line" id="term-input-line" hidden>
@@ -93,17 +87,8 @@ const experience = [
       </div>
     </section>
 
-    <section class="section" id="work">
-      <p class="sec-label" data-reveal><span>// 03</span> · selected work</p>
-      <ul class="work-list">
-        {work.map((w) => (
-          <li class="work-item" data-reveal><span class="work-key">{w.key}</span><span class="work-text">{w.text}</span></li>
-        ))}
-      </ul>
-    </section>
-
     <section class="section" id="experience">
-      <p class="sec-label" data-reveal><span>// 04</span> · experience</p>
+      <p class="sec-label" data-reveal><span>// 03</span> · experience</p>
       <ol class="timeline">
         {experience.map((e) => (
           <li class="tl-item" data-reveal data-tag={e.tag}>
@@ -115,7 +100,7 @@ const experience = [
     </section>
 
     <section class="section" id="contact">
-      <p class="sec-label" data-reveal><span>// 05</span> · contact</p>
+      <p class="sec-label" data-reveal><span>// 04</span> · contact</p>
       <div class="contact-block" data-reveal>
         <p class="contact-line"><span class="prompt-min">$</span> establishing connection…</p>
         <a class="contact-link" href="https://github.com/larsjelle" target="_blank" rel="noopener noreferrer"><span class="cl-key">github</span><span class="cl-arrow">→</span> github.com/larsjelle</a>
@@ -125,7 +110,7 @@ const experience = [
     </section>
   </main>
 
-  <script is:inline define:vars={{ skills, work, experience }}>
+  <script is:inline define:vars={{ skills, experience }}>
     const out = document.getElementById("term-output");
     const inputLine = document.getElementById("term-input-line");
     const input = document.getElementById("term-input");
@@ -160,7 +145,7 @@ const experience = [
       help() {
         const cmds = [
           ["whoami", "who is this"], ["about", "the short version"], ["skills", "what I do"],
-          ["work", "selected projects"], ["experience", "the path here"], ["posts", "read the blog"],
+          ["experience", "the path here"], ["posts", "read the blog"],
           ["contact", "reach me"], ["clear", "clear the screen"],
         ];
         const rows = ['<span class="out">available commands —</span>'];
@@ -186,11 +171,6 @@ const experience = [
           rows.push({ h: '<span class="o-title">' + esc(s.title) + "</span>", c: i === 0 ? "" : "l-sep" });
           s.items.forEach((it) => rows.push({ h: '<span class="o-mark">›</span><span class="o-item">' + esc(it) + "</span>", c: "l-indent" }));
         });
-        return rows;
-      },
-      work() {
-        const rows = [{ h: '<span class="o-head">// selected work</span>', c: "l-head" }];
-        work.forEach((w) => rows.push({ h: '<span class="o-mark">›</span><span class="o-item">' + esc(w.text) + "</span>", c: "l-indent" }));
         return rows;
       },
       experience() {

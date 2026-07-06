@@ -24,19 +24,19 @@ Here's how it's organized, because the layout is the part I'd defend in an argum
 
 This is what `pct list` and `qm list` show on my host right now:
 
-| ID  | Type | Name              | What it does |
-|-----|------|-------------------|--------------|
-| 100 | VM   | haos              | Home Assistant OS |
-| 101 | LXC  | alpine-postgresql | PostgreSQL for whatever needs a database |
-| 102 | LXC  | cloudflared       | Cloudflare Tunnel connector |
-| 103 | LXC  | myspeed           | Internet speed monitoring |
-| 104 | LXC  | n8n               | Workflow automation (the heart of a lot of things) |
-| 105 | VM   | docker            | A Docker host for the stubborn stuff |
-| 106 | LXC  | apache-couchdb    | CouchDB (Obsidian LiveSync) |
-| 107 | LXC  | qdrant            | Vector database for AI experiments |
-| 108 | LXC  | homepage          | Dashboard with links and status for everything |
+| Service | Runs as | What it does |
+|---------|---------|--------------|
+| Home Assistant | VM | the smart-home brain, with the Zigbee stick passed through |
+| Docker host | VM | a home for the stubborn multi-container apps |
+| n8n | container | workflow automation — the heart of a lot of things |
+| PostgreSQL | container | a database for whatever needs one |
+| Qdrant | container | vector database for the AI experiments |
+| CouchDB | container | syncs my Obsidian vault |
+| Cloudflare Tunnel | container | exposes the handful of things that go public |
+| MySpeed | container | keeps an eye on my internet speed |
+| Homepage | container | one dashboard that links to all of it |
 
-Two VMs, the rest containers. That ratio is deliberate.
+Two VMs, everything else a container. That ratio is deliberate.
 
 ## Why LXC first, VMs second
 
@@ -51,7 +51,7 @@ The common homelab pattern is one big VM running Docker with twenty containers i
 The two exceptions prove the rule:
 
 - **Home Assistant OS wants to be an appliance.** HAOS manages its own OS, add-ons and updates. Running it as a VM with USB passthrough for the Zigbee stick is the supported, correct choice. Map the stick once with `qm set 100 -usb0 host=...` and it survives reboots fine.
-- **Some software really wants Docker.** Anything that ships as a five-container compose file goes to VM 105. Docker inside LXC is possible (a privileged container with nesting enabled) and I use that trick occasionally, but for a whole compose stack a small VM is less fragile.
+- **Some software really wants Docker.** Anything that ships as a five-container compose file goes to the Docker VM. Docker inside LXC is possible (a privileged container with nesting enabled) and I use that trick occasionally, but for a whole compose stack a small VM is less fragile.
 
 ## Setting this up yourself
 
@@ -92,6 +92,6 @@ Unprivileged unless a service forces your hand. Give each container a DHCP reser
 
 ## The dashboard tip
 
-Container 108 runs [Homepage](https://gethomepage.dev), and I'd deploy it as one of the first things. Once you're past five services you will forget ports and IPs. A single page that lists everything, with health checks, changes how the whole lab feels. It's also the page I point my girlfriend to when she asks whether "the internet thing" is broken.
+One container runs [Homepage](https://gethomepage.dev), and I'd deploy it as one of the first things. Once you're past five services you will forget ports and IPs. A single page that lists everything, with health checks, changes how the whole lab feels. It's also the page I point my girlfriend to when she asks whether "the internet thing" is broken.
 
 If you're starting from zero: buy a used mini PC, install Proxmox, make your first LXC container. The step from "Raspberry Pi with some Docker containers" to "actual virtualization platform" is much smaller than it looks, and it changes what you're willing to try.

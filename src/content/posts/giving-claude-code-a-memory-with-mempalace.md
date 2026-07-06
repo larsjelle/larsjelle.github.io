@@ -19,7 +19,7 @@ draft: false
 
 In [my AI tooling post](/posts/my-ai-tooling-setup-claude-code-and-agent-of-empires) I called memory the honest limitation of agent workflows. Two weeks later I got fed up enough to fix it.
 
-The trigger was catching myself explaining, for the fifth time, that my Proxmox host is the NUC, that n8n lives in container 104, and that no, the Tailscale names are Cloudflare DNS records and not MagicDNS. Every new Claude Code session is a new hire on their first day. Smart, capable, knows nothing about the building.
+The trigger was catching myself explaining, for the fifth time, that my Proxmox host is the NUC, that n8n runs in its own container, and that no, the Tailscale names are Cloudflare DNS records and not MagicDNS. Every new Claude Code session is a new hire on their first day. Smart, capable, knows nothing about the building.
 
 ![Claude Code through the MemPalace MCP server to a local palace store, seeded from past conversations](/img/posts/giving-claude-code-a-memory-with-mempalace.svg)
 

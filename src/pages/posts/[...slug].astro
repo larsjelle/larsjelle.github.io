@@ -1,0 +1,36 @@
+---
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = (d) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<TerminalLayout
+  title={`${post.data.title} — Lars van Blitterswijk`}
+  description={post.data.excerpt || post.data.title}
+  variant="reading"
+  activeNav="posts"
+>
+  <article class="article">
+    <a class="back-link" href="/posts">← cd ../posts</a>
+    <header class="article-head">
+      <p class="post-date">{fmt(post.data.date)}</p>
+      <h1 class="article-title">{post.data.title}</h1>
+      <div class="article-meta">
+        <span>{post.data.author}</span>
+        {post.data.tags.slice(0, 6).map((t) => <span class="post-tag">{t}</span>)}
+      </div>
+    </header>
+    <div class="article-body">
+      <Content />
+    </div>
+  </article>
+</TerminalLayout>

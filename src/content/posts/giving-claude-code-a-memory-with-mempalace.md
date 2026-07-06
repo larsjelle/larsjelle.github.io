@@ -19,7 +19,9 @@ draft: false
 
 In [my AI tooling post](/posts/my-ai-tooling-setup-claude-code-and-agent-of-empires) I called memory the honest limitation of agent workflows. Two weeks later I got fed up enough to fix it.
 
-The trigger was catching myself explaining, for what must have been the fifth time, that my Proxmox host is the NUC, that n8n lives in container 104, and that no, the Tailscale names are Cloudflare DNS records and not MagicDNS. Every new Claude Code session is a new hire on their first day. Smart, capable, knows nothing about the building.
+The trigger was catching myself explaining, for the fifth time, that my Proxmox host is the NUC, that n8n lives in container 104, and that no, the Tailscale names are Cloudflare DNS records and not MagicDNS. Every new Claude Code session is a new hire on their first day. Smart, capable, knows nothing about the building.
+
+![Claude Code through the MemPalace MCP server to a local palace store, seeded from past conversations](/img/posts/giving-claude-code-a-memory-with-mempalace.svg)
 
 ## What I actually wanted
 
@@ -30,7 +32,7 @@ Before shopping around I wrote down requirements, which I recommend, because the
 - **MCP native**, so Claude Code can read and write memories itself as part of normal work.
 - **Able to bootstrap from history.** I had months of Claude Code session logs sitting in `~/.claude/projects`. A memory system that starts empty ignores the best data I have.
 
-I did what I now always do for this kind of decision: sent an AI research agent out to compare the field properly. The short version of what came back: **Mem0** is the most popular and the fastest to integrate, but shines brightest as a hosted platform. **Zep/Graphiti** is built around temporal knowledge graphs, great when "what was true when" matters. **Letta** (the MemGPT lineage) wants to own the whole agent runtime. All credible, none a clean match for local-first, key-free, seed-from-my-own-logs.
+I sent an AI research agent out to compare the field properly. The short version: **Mem0** is the most popular and fastest to integrate, but shines brightest as a hosted platform. **Zep/Graphiti** is built around temporal knowledge graphs, great when "what was true when" matters. **Letta** (the MemGPT lineage) wants to own the whole agent runtime. All credible, none a clean match for local-first, key-free, seed-from-my-own-logs.
 
 **MemPalace** matched on every point. It's open source, runs entirely offline with local embeddings, needs no API key, ships an MCP server, and, decisively, has a mining command built exactly for ingesting existing Claude conversation logs.
 
@@ -38,7 +40,7 @@ I did what I now always do for this kind of decision: sent an AI research agent 
 
 MemPalace organizes memories the way the ancient mnemonic technique does: a palace with **wings** (broad domains), **rooms** (topics), and **drawers** (individual memories). Search is semantic, so "why did we move n8n off the tunnel" finds the drawer about that decision even though no keyword matches. Under the hood it's SQLite plus a local vector store with a small embedding model; nothing phones home.
 
-The structure sounds like a gimmick until you watch an agent use it. Instead of dumping everything into one soup, memories about my infrastructure live apart from memories about my preferences, and the agent can browse ("what rooms exist in the infrastructure wing?") as well as search.
+The structure sounds like a gimmick until you watch an agent use it. Memories about my infrastructure live apart from memories about my preferences, and the agent can browse ("what rooms exist in the infrastructure wing?") as well as search.
 
 ## Setup, start to finish
 
@@ -51,7 +53,7 @@ pipx install mempalace
 mempalace init
 ```
 
-`init` builds the palace structure (mine lives at `~/.mempalace/palace`) and, nice touch, scans your files to propose an initial taxonomy. It correctly guessed my world before I told it anything: it pulled Proxmox, Tailscale, Cloudflare and Telegram out of my existing notes as entities worth tracking.
+`init` builds the palace structure (mine lives at `~/.mempalace/palace`) and scans your files to propose an initial taxonomy. It correctly guessed my world before I told it anything: it pulled Proxmox, Tailscale, Cloudflare and Telegram out of my existing notes as entities worth tracking.
 
 **2. Mine your history.** The magic step:
 
@@ -69,7 +71,7 @@ claude mcp add mempalace -- mempalace-mcp
 
 That exposes about 19 tools to the agent: search, browse the taxonomy, add memories, write session checkpoints, and so on.
 
-**4. Teach the agent when to use it.** This is the step most people skip and then wonder why nothing changed. Tools that exist but are never called might as well not exist. I added a section to my global `CLAUDE.md` that says, roughly:
+**4. Teach the agent when to use it.** This is the step most people skip and then wonder why nothing changed. I added a section to my global `CLAUDE.md` that says, roughly:
 
 - Before answering anything about my setup, past decisions, or preferences: **search the palace first**, don't guess.
 - When a durable fact or decision emerges in a session: **store it** (and check it isn't already there).
@@ -81,7 +83,5 @@ That exposes about 19 tools to the agent: search, browse the taxonomy, add memor
 ## Does it work?
 
 The test I did right after setup: opened a completely fresh session and asked "what do you know about my reverse proxy setup?" It answered with the NPM container, the wildcard certificate, the grey-cloud Cloudflare gotcha, and cited which memory it pulled each fact from. First day on the job, already knows the building.
-
-A month of caveats compressed: it remembers what was true when the memory was written, so stale facts need pruning now and then (there are delete and update tools for exactly this). And the discipline in `CLAUDE.md` matters more than the software; an agent that doesn't search before answering will happily hallucinate your own infrastructure at you.
 
 If you run Claude Code or any MCP-capable agent and you're tired of being the memory yourself, this is a genuinely satisfying weekend upgrade. Total cost: zero, and your data never leaves the machine.

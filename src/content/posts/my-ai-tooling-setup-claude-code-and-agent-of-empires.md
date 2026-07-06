@@ -11,7 +11,7 @@ tags:
   - ai-agents
   - tmux
   - workflow
-excerpt: "My day-to-day AI setup: Claude Code as the workhorse, MCP servers to give it hands, and Agent of Empires to manage multiple agent sessions from a terminal or my phone. What works, what my rules are, and how to set it up."
+excerpt: "My day-to-day AI setup: Claude Code as the workhorse, MCP servers to give it hands, and Agent of Empires to manage multiple agent sessions from a terminal or my phone."
 author: Lars van Blitterswijk
 draft: false
 ---
@@ -20,16 +20,18 @@ draft: false
 
 A year ago "using AI for code" meant a chat window and a lot of copy-pasting. My current setup looks nothing like that. The AI lives in my terminal, has direct access to my Home Assistant, my n8n instance and my Proxmox host, and I can check on running agent sessions from my phone while walking the dog. This post is the tour.
 
+![Claude Code at the core, MCP servers for tool access, and Agent of Empires multiplexing sessions over tmux](/img/posts/my-ai-tooling-setup-claude-code-and-agent-of-empires.svg)
+
 ## The core: Claude Code
 
-Claude Code is Anthropic's terminal agent. You type what you want, it reads files, runs commands, edits code, and shows you diffs. That description undersells it. The real shift is that it operates on *your actual system*: it can SSH into my Proxmox host, inspect a failing container, and fix the config, all in one conversation.
+Claude Code is Anthropic's terminal agent. You type what you want, it reads files, runs commands, edits code, and shows you diffs. The real shift is that it operates on *your actual system*: it can SSH into my Proxmox host, inspect a failing container, and fix the config, all in one conversation.
 
-My working rules, learned the mildly painful way:
+My working rules:
 
 1. **Plan first, then execute.** For anything non-trivial I make it lay out a plan before touching anything. Reviewing a plan takes a minute. Reviewing a surprise 40-file change takes an hour.
 2. **Everything in git.** Not just code: my Home Assistant configs, my infrastructure notes, this website. If the agent can commit it, the agent can also revert it.
 3. **Small sessions, clear goals.** "Fix the backup timer on the Proxmox host" beats "improve my infrastructure". Agents are like contractors: vague briefs produce confident nonsense.
-4. **Read the diff.** Always. The one time I skipped this it "cleaned up" a workflow that was intentionally weird.
+4. **Read the diff.** Always.
 
 ## Giving the agent hands: MCP servers
 
@@ -67,17 +69,9 @@ aoe                 # TUI
 aoe serve           # web dashboard
 ```
 
-The web dashboard is the sleeper feature. Mine is served over my Tailscale network with a proper domain, using exactly the reverse proxy setup from [my earlier post](/posts/tailscale-nginx-proxy-manager-cloudflare). Kick off a long-running task at your desk, then approve the plan from your phone in the supermarket queue. It sounds like a gimmick. It is not. Agent work is bursty, you're needed for thirty seconds every ten minutes, and being able to answer from anywhere means the work doesn't stall.
+The web dashboard is the sleeper feature. Mine is served over my Tailscale network with a proper domain, using exactly the reverse proxy setup from [my earlier post](/posts/tailscale-nginx-proxy-manager-cloudflare). Kick off a long-running task at your desk, then approve the plan from your phone in the supermarket queue. Agent work is bursty, you're needed for thirty seconds every ten minutes, and being able to answer from anywhere means the work doesn't stall.
 
 Since sessions run inside tmux, nothing dies when I close my laptop; I attach from another machine and everything is still there.
-
-## The honest limitations
-
-Two things keep this from being fully magic.
-
-**Memory.** Every session starts blank. Claude Code reads a `CLAUDE.md` file per project, and I maintain markdown notes it can consult, but the agent that debugged my network last week has no recollection of it this week unless I paste the context back in. Per-project notes don't cross projects either, and my homelab is one big interconnected project. I'm actively looking for a proper solution here; when I find one that works it'll get its own post.
-
-**Trust calibration.** The failure mode of these tools is not incompetence, it's confident half-correctness. The rules above (plans, git, small scopes, read the diff) exist because I violated each of them exactly once.
 
 ## Where to start
 

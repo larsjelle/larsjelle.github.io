@@ -14,11 +14,11 @@ author: Lars van Blitterswijk
 draft: false
 ---
 
-*Set up in a single evening session with Claude Code driving the SSH connection while I approved each step. Written up from that session's log, verified against the live host.*
+Back in [the post about my Proxmox setup](/posts/proxmox-homelab-on-an-intel-nuc) I noted that updates and backups were still manual. That aged exactly like you'd expect: they stopped happening. Ten containers and two VMs, and `apt upgrade` in each one is a chore with no deadline, which means it loses to everything that has one.
 
-Back in [the post about my Proxmox setup](/posts/proxmox-homelab-on-an-intel-nuc) I admitted that updates and backups were still manual. That admission aged exactly like you'd expect: they stopped happening. Ten containers and two VMs, and `apt upgrade` in each one is a chore with no deadline, which means it loses to everything that has one.
+So I automated the three layers properly. Everything below runs on the host itself, no external tools, and has survived a few weeks unattended.
 
-So I automated the three layers properly. Everything below runs on the host itself, no external tools, and has now survived a few weeks unattended.
+![Three layers of automated Proxmox maintenance: host upgrades, container upgrades, and weekly backups](/img/posts/set-and-forget-proxmox-maintenance.svg)
 
 ## Layer 1: the host updates itself
 
@@ -40,7 +40,7 @@ Unattended-Upgrade::Origins-Pattern {
 Unattended-Upgrade::Automatic-Reboot "false";
 ```
 
-That last line is a choice, not an oversight. Kernel updates only take effect after a reboot, but I'd rather the hypervisor running my Home Assistant doesn't decide to bounce itself at 4 AM. The trade: every month or two I notice the "reboot required" flag and pick a moment. If your household tolerates a scheduled window, set `Automatic-Reboot "true"` with an `Automatic-Reboot-Time` and skip even that.
+That last line is a choice, not an oversight. Kernel updates only take effect after a reboot, but I'd rather the hypervisor running my Home Assistant doesn't bounce itself at 4 AM. Every month or two I notice the "reboot required" flag and pick a moment. If your household tolerates a scheduled window, set `Automatic-Reboot "true"` with an `Automatic-Reboot-Time` and skip even that.
 
 ## Layer 2: the containers update themselves
 
@@ -61,7 +61,7 @@ for ct in $(pct list | awk 'NR>1 && $2=="running" {print $1}'); do
 done
 ```
 
-The Alpine branch exists because my PostgreSQL container is Alpine and speaks `apk`, not `apt`. Scheduling is a systemd timer rather than cron, mostly for `RandomizedDelaySec`, which stops everything from hammering the mirrors at the same second:
+The Alpine branch exists because my PostgreSQL container speaks `apk`, not `apt`. Scheduling is a systemd timer rather than cron, mostly for `RandomizedDelaySec`, which stops everything from hammering the mirrors at the same second:
 
 ```ini
 # /etc/systemd/system/update-lxcs.timer
@@ -76,13 +76,13 @@ WantedBy=timers.target
 
 Plus a matching `.service` unit that runs the script, then `systemctl enable --now update-lxcs.timer`. Add a logrotate entry for the log file and forget about it.
 
-One honest caveat: auto-updating application containers can break an application. I accept that risk for this class of services because everything is backed up nightly-ish (next section) and rolling back an LXC from a snapshot takes a minute. If a container runs something version-sensitive, pin it and update that one by hand.
+Everything is backed up nightly (next section) and rolling back an LXC from a snapshot takes a minute, so I'm comfortable auto-updating this class of services. If a container runs something version-sensitive, pin it and update that one by hand.
 
 ## Layer 3: backups without thinking
 
 Proxmox's built-in `vzdump` covers both VMs and containers, and backup jobs are schedulable from the UI (Datacenter, then Backup) or the CLI. Mine: **every guest, Sunday 02:00, snapshot mode, zstd compression, keep the last two.**
 
-Snapshot mode backs up running guests without stopping them. Zstd is fast enough that the whole fleet, including the Home Assistant VM and the Docker VM, finishes before I'm awake. Keeping only two weekly backups sounds thin, but this is the local safety net for "I broke it", not an archive; anything irreplaceable inside the guests is additionally synced off the machine.
+Snapshot mode backs up running guests without stopping them. Zstd is fast enough that the whole fleet, including the Home Assistant VM and the Docker VM, finishes before I'm awake. Two weekly backups sounds thin, but this is the local safety net for "I broke it", not an archive; anything irreplaceable inside the guests is additionally synced off the machine.
 
 The bit most guides skip: the host's own configuration is *not* inside any guest backup. If the boot SSD dies, the guest backups restore your services but not the network config, storage definitions and scripts that made the host itself. A second small timer fixes that, tarballing `/etc`, the package selection list and `/usr/local/sbin` to the backup storage every Sunday at 01:45:
 

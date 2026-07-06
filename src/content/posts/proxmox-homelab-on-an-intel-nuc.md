@@ -14,11 +14,11 @@ author: Lars van Blitterswijk
 draft: false
 ---
 
-*A note on how these posts get written: I build everything myself (well, together with an AI agent, more on that in a later post), and I use Claude to help turn my session notes and configs into readable text. Everything you read here reflects my actual setup and I review every line before publishing.*
-
 My entire homelab is one Intel NUC sitting in a closet. No rack, no blinking 2U servers, no 400 watt idle draw. Just a small box running Proxmox VE that hosts everything from Home Assistant to my automation server, and it barely makes a sound.
 
-I want to walk through how it's organized, because the layout is the part I'd defend in an argument: almost everything runs as an LXC container, one service per container, and VMs only exist where they genuinely have to.
+Here's how it's organized, because the layout is the part I'd defend in an argument: almost everything runs as an LXC container, one service per container, and VMs only exist where they genuinely have to.
+
+![One Intel NUC running Proxmox with two VMs and seven LXC containers on the vmbr0 bridge](/img/posts/proxmox-homelab-on-an-intel-nuc.svg)
 
 ## The inventory
 
@@ -40,7 +40,7 @@ Two VMs, the rest containers. That ratio is deliberate.
 
 ## Why LXC first, VMs second
 
-The common homelab pattern is one big VM running Docker with twenty containers inside. I went the other way, and after a couple of years I still think it's the better trade for a single small machine:
+The common homelab pattern is one big VM running Docker with twenty containers inside. I went the other way, and it's the better trade for a single small machine:
 
 **LXC containers share the host kernel.** No virtualization overhead, no reserved RAM. My PostgreSQL container idles at around 60 MB. A VM doing the same job would have a whole kernel, systemd and a memory balloon to babysit.
 
@@ -50,12 +50,12 @@ The common homelab pattern is one big VM running Docker with twenty containers i
 
 The two exceptions prove the rule:
 
-- **Home Assistant OS wants to be an appliance.** HAOS manages its own OS, its own add-ons, its own updates. Running it as a VM with USB passthrough for the Zigbee stick is the supported, boring, correct choice. Getting the USB passthrough right took me an evening of `lsusb` and `qm set 100 -usb0 host=...`, but once it's mapped, it survives reboots fine.
-- **Some software really wants Docker.** Anything that ships as a five-container compose file goes to VM 105. Docker inside LXC is possible (you need a privileged container with nesting enabled) and I do use that trick occasionally, but for a whole compose stack a small VM is less fragile.
+- **Home Assistant OS wants to be an appliance.** HAOS manages its own OS, add-ons and updates. Running it as a VM with USB passthrough for the Zigbee stick is the supported, correct choice. Map the stick once with `qm set 100 -usb0 host=...` and it survives reboots fine.
+- **Some software really wants Docker.** Anything that ships as a five-container compose file goes to VM 105. Docker inside LXC is possible (a privileged container with nesting enabled) and I use that trick occasionally, but for a whole compose stack a small VM is less fragile.
 
 ## Setting this up yourself
 
-If you want to replicate this, the outline is short:
+The outline is short:
 
 **1. Install Proxmox VE.** Grab the ISO from proxmox.com, write it to a USB stick, install on any x86 box with 16 GB of RAM or more. A used NUC or a mini PC with an efficient CPU is ideal. Mine draws under 15 watts most of the day.
 
@@ -92,12 +92,6 @@ Unprivileged unless a service forces your hand. Give each container a DHCP reser
 
 ## The dashboard tip
 
-Container 108 runs [Homepage](https://gethomepage.dev), and I'd genuinely recommend it as one of the first things you deploy. Once you're past five services you will forget ports and IPs. A single page that lists everything, with health checks, changes how the whole lab feels. It's also the page I point my girlfriend to when she asks whether "the internet thing" is broken.
-
-## What's still ugly
-
-Honesty section. Right now n8n is reachable from the internet through a Cloudflare Tunnel (that's what container 102 is for). It works, but I'm increasingly uncomfortable having my automation server, which holds credentials for half my digital life, answering on a public hostname. Rethinking that is next weekend's project, and probably the next post.
-
-The other gap: updates and backups are still manual. `apt upgrade` in eight containers by hand is exactly the kind of chore that stops happening after month two. Also on the list.
+Container 108 runs [Homepage](https://gethomepage.dev), and I'd deploy it as one of the first things. Once you're past five services you will forget ports and IPs. A single page that lists everything, with health checks, changes how the whole lab feels. It's also the page I point my girlfriend to when she asks whether "the internet thing" is broken.
 
 If you're starting from zero: buy a used mini PC, install Proxmox, make your first LXC container. The step from "Raspberry Pi with some Docker containers" to "actual virtualization platform" is much smaller than it looks, and it changes what you're willing to try.

@@ -23,17 +23,19 @@ So this weekend I rebuilt remote access around a different idea: **nothing is pu
 
 Three pieces make that work.
 
+![Client to Cloudflare DNS to Nginx Proxy Manager over Tailscale to backend services on the Proxmox LAN](/img/posts/tailscale-nginx-proxy-manager-cloudflare.svg)
+
 ## Piece 1: Tailscale as the network
 
-Tailscale is WireGuard with the annoying parts automated. Install it on your devices, log in, and every device gets a stable private IP in the `100.x.y.z` range and can reach every other device, regardless of what network they're physically on. The free tier covers a personal setup comfortably; my tailnet is currently 7 nodes (the Proxmox side, my laptop, a Mac mini, Home Assistant, two phones and a Windows machine).
+Tailscale is WireGuard with the annoying parts automated. Install it, log in, and every device gets a stable private IP in the `100.x.y.z` range and can reach every other device regardless of what network it's physically on. The free tier covers a personal setup comfortably; my tailnet is currently 7 nodes (the Proxmox side, my laptop, a Mac mini, Home Assistant, two phones and a Windows machine).
 
-The trick that saves you from installing Tailscale in every single container is a **subnet router**. I made a small dedicated LXC container on Proxmox that joins the tailnet and advertises my whole LAN:
+The trick that saves you from installing Tailscale in every container is a **subnet router**. I made a small dedicated LXC container on Proxmox that joins the tailnet and advertises my whole LAN:
 
 ```bash
 tailscale up --advertise-routes=192.168.3.0/24 --advertise-exit-node
 ```
 
-Approve the route in the Tailscale admin console and every device on the tailnet can now reach every LAN IP. One gotcha that had me confused for a while: traffic from the tailnet arrives at your LAN devices with a `100.x` source address they don't know how to answer. The fix is a masquerade rule on the subnet router so everything looks like local traffic:
+Approve the route in the Tailscale admin console and every device on the tailnet can reach every LAN IP. One gotcha: traffic from the tailnet arrives at your LAN devices with a `100.x` source address they don't know how to answer. The fix is a masquerade rule on the subnet router so everything looks like local traffic:
 
 ```bash
 iptables -t nat -I POSTROUTING -o eth0 -s 100.64.0.0/10 -j MASQUERADE
@@ -47,9 +49,9 @@ Raw IPs and ports work, but `https://192.168.3.85:5678` with a certificate warni
 1. **Reverse proxy**: `n8n.ts.larsjelle.nl` forwards to the n8n container, `proxmox.ts.larsjelle.nl` to the Proxmox UI on port 8006, and so on. Nine services so far, all defined in a friendly UI.
 2. **One wildcard certificate**: a single Let's Encrypt cert for `*.ts.larsjelle.nl`.
 
-The certificate part is where most private-network guides fall apart, because Let's Encrypt normally needs to reach your server over the internet to validate. The way around that is the **DNS-01 challenge**: instead of connecting to you, Let's Encrypt asks you to prove domain control by creating a DNS record. NPM automates this. You create a Cloudflare API token with `Zone.DNS` edit rights, paste it into NPM's SSL settings, request `*.ts.larsjelle.nl`, and renewal happens on its own from then on. Your services never need to be reachable from the internet at all.
+The certificate part is where most private-network guides fall apart, because Let's Encrypt normally needs to reach your server over the internet to validate. The way around that is the **DNS-01 challenge**: instead of connecting to you, Let's Encrypt asks you to prove domain control by creating a DNS record. NPM automates this. Create a Cloudflare API token with `Zone.DNS` edit rights, paste it into NPM's SSL settings, request `*.ts.larsjelle.nl`, and renewal happens on its own from then on. Your services never need to be reachable from the internet.
 
-Practical NPM-on-Proxmox note: NPM ships as a Docker image, so its LXC container needs Docker inside, which means a privileged container with the `nesting` feature enabled. Not my favorite exception to the unprivileged rule, but it's a proxy, it's the thing that's supposed to be in front.
+Practical NPM-on-Proxmox note: NPM ships as a Docker image, so its LXC container needs Docker inside, which means a privileged container with the `nesting` feature enabled. It's a proxy, the thing that's supposed to be in front, so I'm comfortable with the exception.
 
 ## Piece 3: Cloudflare DNS pointing into the tailnet
 
@@ -60,15 +62,15 @@ n8n.ts.larsjelle.nl      A    100.117.21.5    (DNS only)
 proxmox.ts.larsjelle.nl  A    100.117.21.5    (DNS only)
 ```
 
-Anyone in the world can look up that record. And it does them no good, because `100.117.21.5` is only routable if you're a logged-in member of my tailnet. Public names, private destinations. You get real DNS, real certs, and zero exposure.
+Anyone in the world can look up that record, and it does them no good, because `100.117.21.5` is only routable if you're a logged-in member of my tailnet. Public names, private destinations: real DNS, real certs, zero exposure.
 
-**The setting that cost me an evening: the orange cloud.** Cloudflare proxies new DNS records by default ("Proxied", the orange cloud icon). For these records that's fatal, because Cloudflare's edge tries to connect to `100.117.21.5` itself, can't reach your private network, and serves you a 5xx error page. Every record pointing at a tailnet IP must be set to **DNS only** (grey cloud). If you switch one from orange to grey and it still fails, wait out the DNS cache or flush it; the old edge IP lingers.
+**The setting that cost me an evening: the orange cloud.** Cloudflare proxies new DNS records by default ("Proxied", the orange cloud icon). For these records that's fatal, because Cloudflare's edge tries to connect to `100.117.21.5` itself, can't reach your private network, and serves a 5xx error page. Every record pointing at a tailnet IP must be set to **DNS only** (grey cloud). If you switch one to grey and it still fails, wait out the DNS cache or flush it; the old edge IP lingers.
 
-Why not just use Tailscale's built-in MagicDNS names? You can, and it's fine. I wanted names under my own domain, one wildcard cert instead of per-node certs, and names that don't change if I restructure the tailnet. If you don't care about that, `tailscale serve` gets you HTTPS on a `.ts.net` name with zero of the above.
+Why not just use Tailscale's built-in MagicDNS names? You can. I wanted names under my own domain, one wildcard cert instead of per-node certs, and names that don't change if I restructure the tailnet. If you don't care about that, `tailscale serve` gets you HTTPS on a `.ts.net` name with none of the above.
 
 ## The migration itself
 
-With this in place I moved n8n off the public tunnel. The change was anticlimactic: point the DNS record at the tailnet, delete the tunnel route, update the webhook URL in n8n's config. The cloudflared container still exists but no longer fronts anything sensitive; I'm keeping it around because a locked-down tunnel is still the right answer for the rare thing that genuinely must accept traffic from the outside (a webhook from a third-party service, for example).
+With this in place I moved n8n off the public tunnel. The change was anticlimactic: point the DNS record at the tailnet, delete the tunnel route, update the webhook URL in n8n's config. The cloudflared container still exists but no longer fronts anything sensitive; a locked-down tunnel is still the right answer for the rare thing that genuinely must accept traffic from outside (a webhook from a third-party service, for example).
 
 ## Setup checklist
 

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img" aria-label="Intel NUC running Proxmox with VMs and LXC containers">
+  <defs>
+    <style>
+      .box{fill:#10151c;stroke:#1c2530;stroke-width:1;}
+      .vm{fill:#0f1a17;stroke:#46e39a;stroke-width:1.2;}
+      .lxc{fill:#0d1720;stroke:#2b3a44;stroke-width:1;}
+      .t{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#e6ece8;font-size:13px;font-weight:600;}
+      .id{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#46e39a;font-size:11px;}
+      .s{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#6d7d82;font-size:10px;}
+      .lbl{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#46e39a;font-size:11px;letter-spacing:1px;}
+      .cap{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#58d6ff;font-size:10px;}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="758" height="338" rx="12" fill="#0b1116" stroke="#1c2530"/>
+  <text class="lbl" x="22" y="30">// ONE NUC · PROXMOX VE</text>
+  <rect class="box" x="22" y="46" width="716" height="30" rx="6" fill="#0f151b"/>
+  <text class="t" x="380" y="66" text-anchor="middle">Intel NUC — Proxmox VE · vmbr0 bridge</text>
+
+  <!-- VMs -->
+  <rect class="vm" x="22" y="92" width="220" height="54" rx="7"/>
+  <text class="id" x="36" y="114">VM 100</text><text class="t" x="100" y="114">HAOS</text>
+  <text class="s" x="36" y="132">Home Assistant · USB Zigbee passthrough</text>
+
+  <rect class="vm" x="258" y="92" width="160" height="54" rx="7"/>
+  <text class="id" x="272" y="114">VM 105</text><text class="t" x="336" y="114">Docker</text>
+  <text class="s" x="272" y="132">container host</text>
+
+  <!-- LXCs grid -->
+  <g>
+    <rect class="lxc" x="22" y="162" width="172" height="46" rx="6"/><text class="id" x="34" y="182">101</text><text class="t" x="70" y="182" style="font-size:12px">PostgreSQL</text>
+    <rect class="lxc" x="206" y="162" width="172" height="46" rx="6"/><text class="id" x="218" y="182">102</text><text class="t" x="254" y="182" style="font-size:12px">Cloudflared</text>
+    <rect class="lxc" x="390" y="162" width="172" height="46" rx="6"/><text class="id" x="402" y="182">103</text><text class="t" x="438" y="182" style="font-size:12px">MySpeed</text>
+    <rect class="lxc" x="574" y="162" width="164" height="46" rx="6"/><text class="id" x="586" y="182">104</text><text class="t" x="622" y="182" style="font-size:12px">n8n</text>
+    <rect class="lxc" x="22" y="216" width="172" height="46" rx="6"/><text class="id" x="34" y="236">106</text><text class="t" x="70" y="236" style="font-size:12px">CouchDB</text>
+    <rect class="lxc" x="206" y="216" width="172" height="46" rx="6"/><text class="id" x="218" y="236">107</text><text class="t" x="254" y="236" style="font-size:12px">Qdrant</text>
+    <rect class="lxc" x="390" y="216" width="348" height="46" rx="6"/><text class="id" x="402" y="236">108</text><text class="t" x="438" y="236" style="font-size:12px">Homepage dashboard</text>
+  </g>
+
+  <rect class="box" x="22" y="278" width="716" height="34" rx="6" fill="#0f151b"/>
+  <text class="t" x="380" y="300" text-anchor="middle" style="font-size:12px">Cloudflare Tunnel → exposes services · Homepage links them</text>
+
+  <text class="cap" x="22" y="330">VMs where hardware/isolation matters · LXCs for everything else</text>
+</svg>

@@ -27,24 +27,19 @@ Three pieces make that work.
 
 ## Piece 1: Tailscale as the network
 
-Tailscale is WireGuard with the annoying parts automated. Install it, log in, and every device gets a stable private IP in the `100.x.y.z` range and can reach every other device regardless of what network it's physically on. The free tier covers a personal setup comfortably; my tailnet is currently 7 nodes (the Proxmox side, my laptop, a Mac mini, Home Assistant, two phones and a Windows machine).
+Tailscale is WireGuard with the annoying parts automated. Install it, log in, and every device gets a stable private address on the tailnet and can reach every other device regardless of what network it's physically on. The free tier covers a personal setup comfortably; my tailnet is currently 7 nodes (the Proxmox side, my laptop, a Mac mini, Home Assistant, two phones and a Windows machine).
 
 The trick that saves you from installing Tailscale in every container is a **subnet router**. I made a small dedicated LXC container on Proxmox that joins the tailnet and advertises my whole LAN:
 
 ```bash
-tailscale up --advertise-routes=192.168.3.0/24 --advertise-exit-node
+tailscale up --advertise-routes=<your-lan-subnet> --advertise-exit-node
 ```
 
-Approve the route in the Tailscale admin console and every device on the tailnet can reach every LAN IP. One gotcha: traffic from the tailnet arrives at your LAN devices with a `100.x` source address they don't know how to answer. The fix is a masquerade rule on the subnet router so everything looks like local traffic:
-
-```bash
-iptables -t nat -I POSTROUTING -o eth0 -s 100.64.0.0/10 -j MASQUERADE
-apt install iptables-persistent   # so it survives reboots
-```
+Approve the route in the Tailscale admin console and every device on the tailnet can reach the whole LAN. One gotcha: traffic arriving from the tailnet shows up with a tailnet source address your LAN devices don't know how to answer, so add a masquerade rule on the subnet router (made persistent across reboots) that makes it look like local traffic.
 
 ## Piece 2: Nginx Proxy Manager for names and certificates
 
-Raw IPs and ports work, but `https://192.168.3.85:5678` with a certificate warning is not a setup your household will adopt. I run Nginx Proxy Manager (NPM) in its own container on Proxmox. It does two jobs:
+Raw addresses and ports work, but handing the household an unmemorable link with a certificate warning is not a setup anyone will adopt. I run Nginx Proxy Manager (NPM) in its own container on Proxmox. It does two jobs:
 
 1. **Reverse proxy**: `n8n.ts.larsjelle.nl` forwards to the n8n container, `proxmox.ts.larsjelle.nl` to the Proxmox UI on port 8006, and so on. Nine services so far, all defined in a friendly UI.
 2. **One wildcard certificate**: a single Let's Encrypt cert for `*.ts.larsjelle.nl`.
@@ -55,16 +50,11 @@ Practical NPM-on-Proxmox note: NPM ships as a Docker image, so its LXC container
 
 ## Piece 3: Cloudflare DNS pointing into the tailnet
 
-Here's the part that feels wrong the first time: the DNS records for `*.ts.larsjelle.nl` live in normal public Cloudflare DNS, but they point at the **Tailscale IP** of the NPM container:
+Here's the part that feels wrong the first time: the DNS records for `*.ts.larsjelle.nl` live in normal public Cloudflare DNS, but they point at the NPM container's **private tailnet address** — plain `A` records, set to DNS-only.
 
-```plain
-n8n.ts.larsjelle.nl      A    100.117.21.5    (DNS only)
-proxmox.ts.larsjelle.nl  A    100.117.21.5    (DNS only)
-```
+Anyone in the world can look up those records, and it does them no good: a tailnet address is only routable if you're a logged-in member of my tailnet. Public names, private destinations: real DNS, real certs, zero exposure.
 
-Anyone in the world can look up that record, and it does them no good, because `100.117.21.5` is only routable if you're a logged-in member of my tailnet. Public names, private destinations: real DNS, real certs, zero exposure.
-
-**The setting that cost me an evening: the orange cloud.** Cloudflare proxies new DNS records by default ("Proxied", the orange cloud icon). For these records that's fatal, because Cloudflare's edge tries to connect to `100.117.21.5` itself, can't reach your private network, and serves a 5xx error page. Every record pointing at a tailnet IP must be set to **DNS only** (grey cloud). If you switch one to grey and it still fails, wait out the DNS cache or flush it; the old edge IP lingers.
+**The setting that cost me an evening: the orange cloud.** Cloudflare proxies new DNS records by default ("Proxied", the orange cloud icon). For these records that's fatal, because Cloudflare's edge tries to connect to that private address itself, can't reach your private network, and serves a 5xx error page. Every record pointing at a tailnet address must be set to **DNS only** (grey cloud). If you switch one to grey and it still fails, wait out the DNS cache or flush it; the old edge IP lingers.
 
 Why not just use Tailscale's built-in MagicDNS names? You can. I wanted names under my own domain, one wildcard cert instead of per-node certs, and names that don't change if I restructure the tailnet. If you don't care about that, `tailscale serve` gets you HTTPS on a `.ts.net` name with none of the above.
 
@@ -80,7 +70,7 @@ If you want to build the same thing:
 2. Nginx Proxy Manager somewhere on that LAN.
 3. A domain on Cloudflare (or any DNS provider with API support that Let's Encrypt DNS-01 plugins understand). Dedicate a subdomain like `ts.yourdomain.com` to the private stuff.
 4. Cloudflare API token, wildcard cert in NPM via DNS-01.
-5. A records for each service, pointing at the NPM host's Tailscale IP, **grey cloud**.
+5. A records for each service, pointing at NPM's tailnet address, **grey cloud**.
 6. Add proxy hosts in NPM, enable WebSocket support for anything interactive (n8n and Home Assistant both need it).
 
 Total cost: zero. Tailscale free tier, Let's Encrypt free, Cloudflare free plan. The only thing you pay for is the domain you probably already own.

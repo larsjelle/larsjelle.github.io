@@ -21,7 +21,7 @@
   <rect class="box" x="200" y="110" width="150" height="60" rx="8"/>
   <text class="t" x="275" y="132" text-anchor="middle">Cloudflare DNS</text>
   <text class="s" x="275" y="149" text-anchor="middle">grey-cloud A record</text>
-  <text class="s" x="275" y="163" text-anchor="middle">→ 100.x Tailscale IP</text>
+  <text class="s" x="275" y="163" text-anchor="middle">→ NPM's tailnet address</text>
 
   <rect class="acc" x="388" y="102" width="170" height="76" rx="8"/>
   <text class="t" x="473" y="128" text-anchor="middle">Nginx Proxy Mgr</text>

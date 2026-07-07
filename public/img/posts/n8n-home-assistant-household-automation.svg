@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-label="Telegram to n8n to Nextcloud and Home Assistant architecture">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#46e39a"/></marker>
+    <style>
+      .box{fill:#10151c;stroke:#1c2530;stroke-width:1;}
+      .acc{fill:#0f1a17;stroke:#46e39a;stroke-width:1.3;}
+      .t{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#e6ece8;font-size:14px;font-weight:600;}
+      .s{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#6d7d82;font-size:10.5px;}
+      .lbl{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#46e39a;font-size:11px;letter-spacing:1px;}
+      .cap{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#58d6ff;font-size:10px;}
+      .flow{stroke:#46e39a;stroke-width:1.4;fill:none;}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="758" height="298" rx="12" fill="#0b1116" stroke="#1c2530"/>
+  <text class="lbl" x="22" y="30">// TELEGRAM → n8n → HOME</text>
+
+  <rect class="box" x="22" y="120" width="130" height="60" rx="8"/>
+  <text class="t" x="87" y="147" text-anchor="middle">Telegram</text>
+  <text class="s" x="87" y="165" text-anchor="middle">group chat + bot</text>
+
+  <rect class="acc" x="300" y="112" width="160" height="76" rx="8"/>
+  <text class="t" x="380" y="140" text-anchor="middle">n8n</text>
+  <text class="s" x="380" y="158" text-anchor="middle">LLM classify · workflows</text>
+  <text class="s" x="380" y="173" text-anchor="middle">state in data tables</text>
+
+  <rect class="box" x="600" y="52" width="138" height="66" rx="8"/>
+  <text class="t" x="669" y="78" text-anchor="middle">Nextcloud</text>
+  <text class="s" x="669" y="95" text-anchor="middle">Tasks · Deck</text>
+  <text class="s" x="669" y="109" text-anchor="middle">Cookbook · Meals</text>
+
+  <rect class="box" x="600" y="140" width="138" height="52" rx="8"/>
+  <text class="t" x="669" y="163" text-anchor="middle">Open-Meteo</text>
+  <text class="s" x="669" y="180" text-anchor="middle">+ Tado thermostats</text>
+
+  <rect class="box" x="300" y="222" width="160" height="52" rx="8"/>
+  <text class="t" x="380" y="245" text-anchor="middle">Home Assistant</text>
+  <text class="s" x="380" y="262" text-anchor="middle">reads CalDAV → dashboards</text>
+
+  <!-- flows -->
+  <path class="flow" marker-end="url(#ah)" d="M152,150 L296,150"/>
+  <path class="flow" marker-end="url(#ah)" d="M300,145 L156,145" opacity="0.5"/>
+  <path class="flow" marker-end="url(#ah)" d="M460,140 C520,120 540,100 596,90"/>
+  <path class="flow" marker-end="url(#ah)" d="M460,160 C520,166 540,166 596,166"/>
+  <path class="flow" marker-end="url(#ah)" d="M669,118 C669,190 520,240 464,244"/>
+  <text class="s" x="224" y="140" text-anchor="middle">long-poll</text>
+
+  <text class="cap" x="22" y="288">self-hosted on Proxmox · reachable only over Tailscale · outbound-only</text>
+</svg>

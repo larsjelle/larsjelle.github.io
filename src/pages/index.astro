@@ -1,0 +1,240 @@
+---
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+
+const skills = [
+  { id: "ai_automation", title: "AI Automation & Agents", items: ["n8n workflow automation", "AI agents & RAG systems", "System integration"] },
+  { id: "security_automation", title: "Security Automation", items: ["Automated threat hunting", "Incident response automation", "Automating security operations"] },
+  { id: "software_dev", title: "Software Development", items: ["C#, Python, PowerShell, Bash", "Custom system integration & APIs"] },
+  { id: "information_security", title: "Information Security", items: ["Incident investigation & threat analysis", "Security governance", "InfoSec management foundation"] },
+  { id: "agile", title: "Agile Way of Working", items: ["Scrum Master & Product Owner experience", "Iterative, team-based delivery", "Cross-functional collaboration"] },
+];
+
+const experience = [
+  { tag: "current", role: "AI Automation Engineer", detail: "Designing AI agents, RAG systems and n8n workflows that connect in-house platforms and automate security and business processes." },
+  { tag: "prev", role: "Product Owner — in-house SOAR", detail: "Owned the roadmap for an internal Security Orchestration, Automation & Response platform. Scrum Master experience alongside." },
+  { tag: "prev", role: "Security Analyst", detail: "Incident investigation and threat hunting; began automating the repetitive parts of the security process." },
+  { tag: "prev", role: "Software Developer", detail: "Built and integrated systems across C#, Python, PowerShell and Bash." },
+  { tag: "root", role: "Information Security Management", detail: "Educational foundation — the security mindset underneath everything I build." },
+];
+---
+
+<TerminalLayout>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="kicker" data-reveal>◢ larsjelle.nl — secure shell established</p>
+      <h1 class="name" data-reveal>Lars van Blitterswijk</h1>
+      <p class="role" data-reveal>
+        <span class="role-tag">AI Automation Engineer</span>
+        <span class="sep">/</span> Security · Software · Agents
+      </p>
+
+      <div class="terminal" data-reveal>
+        <div class="term-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="term-title">lars@larsjelle: ~/portfolio</span>
+        </div>
+        <div class="term-body" id="term-body">
+          <div id="term-output">
+            <noscript>
+              <div class="term-line"><span class="out"><span class="hl">Lars van Blitterswijk</span> :: <span class="ok">AI Automation Engineer</span></span></div>
+              <div class="term-line"><span class="out">I build AI-driven automation that connects systems and removes manual work.</span></div>
+              <div class="term-line"><span class="out">Scroll down for skills, experience and contact.</span></div>
+            </noscript>
+          </div>
+          <div class="term-input-line" id="term-input-line" hidden>
+            <span class="prompt"><span class="u">lars@larsjelle</span><span class="c">:~$</span></span>
+            <input id="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal command input" />
+            <span class="input-cursor" id="input-cursor"></span>
+          </div>
+        </div>
+      </div>
+      <p class="hint" data-reveal>
+        try <button class="chip" data-cmd="help">help</button>
+        <button class="chip" data-cmd="skills">skills</button>
+        <button class="chip" data-cmd="experience">experience</button>
+        <button class="chip" data-cmd="posts">posts</button>
+        — or scroll ↓
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="about">
+      <p class="sec-label" data-reveal><span>// 01</span> · about</p>
+      <div class="about-grid">
+        <p class="lede" data-reveal>I build <em>AI-driven automation</em> that connects systems and removes manual work.</p>
+        <p class="prose" data-reveal>
+          My core craft is automation engineering with n8n — designing RAG systems, AI agents
+          and end-to-end workflows that integrate systems across the business. That work sits on
+          a security foundation: I automate the cybersecurity process from threat hunting to
+          incident response, and I develop across C#, Python, PowerShell and Bash.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <p class="sec-label" data-reveal><span>// 02</span> · skills</p>
+      <div class="skills-grid">
+        {skills.map((s) => (
+          <article class="panel" data-reveal>
+            <header class="panel-bar"><span class="dot sm"></span><span class="panel-file">{s.id}.md</span></header>
+            <div class="panel-body">
+              <h3>{s.title}</h3>
+              <ul>{s.items.map((it) => (<li><span class="li-mark">›</span> {it}</li>))}</ul>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <p class="sec-label" data-reveal><span>// 03</span> · experience</p>
+      <ol class="timeline">
+        {experience.map((e) => (
+          <li class="tl-item" data-reveal data-tag={e.tag}>
+            <span class="tl-node"></span>
+            <div class="tl-content"><h3>{e.role}</h3><p>{e.detail}</p></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="section" id="contact">
+      <p class="sec-label" data-reveal><span>// 04</span> · contact</p>
+      <div class="contact-block" data-reveal>
+        <p class="contact-line"><span class="prompt-min">$</span> establishing connection…</p>
+        <a class="contact-link" href="https://github.com/larsjelle" target="_blank" rel="noopener noreferrer"><span class="cl-key">github</span><span class="cl-arrow">→</span> github.com/larsjelle</a>
+        <a class="contact-link" href="https://www.linkedin.com/in/lars-van-blitterswijk/" target="_blank" rel="noopener noreferrer"><span class="cl-key">linkedin</span><span class="cl-arrow">→</span> /in/lars-van-blitterswijk</a>
+        <a class="contact-link" href="mailto:contact@larsjelle.nl"><span class="cl-key">email</span><span class="cl-arrow">→</span> contact@larsjelle.nl</a>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline define:vars={{ skills, experience }}>
+    const out = document.getElementById("term-output");
+    const inputLine = document.getElementById("term-input-line");
+    const input = document.getElementById("term-input");
+    const body = document.getElementById("term-body");
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+    function line(html, cls) {
+      const div = document.createElement("div");
+      div.className = "term-line " + (cls || "");
+      div.innerHTML = html;
+      out.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+      return div;
+    }
+    const promptHTML = '<span class="prompt"><span class="u">lars@larsjelle</span><span class="c">:~$</span></span>';
+    function promptEcho() { const div = line(promptHTML + ' <span class="cmd"></span>'); return div.querySelector(".cmd"); }
+    function typeInto(span, text) {
+      return new Promise((resolve) => {
+        if (prefersReduced) { span.textContent = text; resolve(); return; }
+        let i = 0;
+        const t = setInterval(() => {
+          span.textContent = text.slice(0, ++i);
+          body.scrollTop = body.scrollHeight;
+          if (i >= text.length) { clearInterval(t); resolve(); }
+        }, 34);
+      });
+    }
+    const wait = (ms) => new Promise((r) => setTimeout(r, prefersReduced ? 0 : ms));
+
+    const COMMANDS = {
+      help() {
+        const cmds = [
+          ["whoami", "who is this"], ["about", "the short version"], ["skills", "what I do"],
+          ["experience", "the path here"], ["posts", "read the blog"],
+          ["contact", "reach me"], ["clear", "clear the screen"],
+        ];
+        const rows = ['<span class="out">available commands —</span>'];
+        cmds.forEach(([c, d]) => rows.push('<span class="out"><span class="cmd-k">' + c + '</span><span class="cmd-d">' + d + "</span></span>"));
+        return rows;
+      },
+      whoami() {
+        return [
+          '<span class="out"><span class="hl">Lars van Blitterswijk</span> :: <span class="ok">AI Automation Engineer</span></span>',
+          '<span class="out">Security · Software · Agents — based in the Netherlands.</span>',
+        ];
+      },
+      about() {
+        return [
+          '<span class="out">I build <span class="hl">AI-driven automation</span> that connects systems and removes manual work.</span>',
+          '<span class="out">Core craft: automation engineering with n8n — RAG systems, AI agents and</span>',
+          '<span class="out">end-to-end workflows — on a security foundation from threat hunting to response.</span>',
+        ];
+      },
+      skills() {
+        const rows = [{ h: '<span class="o-head">// skills — what I do</span>', c: "l-head" }];
+        skills.forEach((s, i) => {
+          rows.push({ h: '<span class="o-title">' + esc(s.title) + "</span>", c: i === 0 ? "" : "l-sep" });
+          s.items.forEach((it) => rows.push({ h: '<span class="o-mark">›</span><span class="o-item">' + esc(it) + "</span>", c: "l-indent" }));
+        });
+        return rows;
+      },
+      experience() {
+        const rows = [{ h: '<span class="o-head">// experience — the path here</span>', c: "l-head" }];
+        experience.forEach((e, i) => {
+          const tag = e.tag === "current" ? '<span class="o-tag now">[now]</span>' : '<span class="o-tag past">[past]</span>';
+          rows.push({ h: tag + '<span class="o-title">' + esc(e.role) + "</span>", c: i === 0 ? "" : "l-sep" });
+          rows.push({ h: '<span class="o-detail">' + esc(e.detail) + "</span>", c: "l-indent" });
+        });
+        return rows;
+      },
+      contact() {
+        return [
+          '<span class="out"><span class="key">github  </span> → <a href="https://github.com/larsjelle" target="_blank" rel="noopener" style="color:var(--green)">github.com/larsjelle</a></span>',
+          '<span class="out"><span class="key">linkedin</span> → <a href="https://www.linkedin.com/in/lars-van-blitterswijk/" target="_blank" rel="noopener" style="color:var(--green)">/in/lars-van-blitterswijk</a></span>',
+          '<span class="out"><span class="key">email   </span> → <a href="mailto:contact@larsjelle.nl" style="color:var(--green)">contact@larsjelle.nl</a></span>',
+        ];
+      },
+    };
+
+    function run(raw) {
+      const cmd = raw.trim().toLowerCase();
+      line(promptHTML + ' <span class="cmd">' + esc(raw) + "</span>");
+      if (!cmd) return;
+      if (cmd === "clear") { out.innerHTML = ""; return; }
+      if (cmd === "posts" || cmd === "blog") {
+        line('<span class="out"><span class="ok">opening</span> /posts …</span>');
+        setTimeout(() => (window.location.href = "/posts"), 350);
+        return;
+      }
+      const fn = COMMANDS[cmd];
+      if (fn) { fn().forEach((l) => (typeof l === "string" ? line(l) : line(l.h, l.c))); }
+      else if (cmd === "sudo" || cmd.startsWith("sudo ")) { line('<span class="out"><span class="warn">nice try.</span> no root here — just results.</span>'); }
+      else if (cmd === "ls") { line('<span class="out">about.txt  skills/  experience.log  posts/  contact.md</span>'); }
+      else { line('<span class="out"><span class="warn">command not found:</span> ' + esc(cmd) + ' — try <span class="key">help</span></span>'); }
+    }
+
+    async function boot() {
+      out.innerHTML = "";
+      await wait(600);
+      await typeInto(promptEcho(), "whoami");
+      await wait(500);
+      line('<span class="out"><span class="hl">Lars van Blitterswijk</span> :: <span class="ok">AI Automation Engineer</span></span>');
+      await wait(800);
+      await typeInto(promptEcho(), "cat mission.txt");
+      await wait(500);
+      line('<span class="out">I design AI-driven automation that connects systems and removes manual work —</span>');
+      await wait(450);
+      line('<span class="out">from intelligent agents and RAG systems to automated security operations.</span>');
+      await wait(700);
+      inputLine.hidden = false;
+      input.focus();
+    }
+
+    function syncWidth() { input.style.width = input.value.length + "ch"; }
+    input.addEventListener("input", syncWidth);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { const v = input.value; input.value = ""; syncWidth(); run(v); body.scrollTop = body.scrollHeight; }
+    });
+    body.addEventListener("click", () => input.focus());
+    document.querySelectorAll(".chip").forEach((c) =>
+      c.addEventListener("click", () => { run(c.dataset.cmd); input.focus(); body.scrollTop = body.scrollHeight; })
+    );
+
+    boot();
+  </script>
+</TerminalLayout>

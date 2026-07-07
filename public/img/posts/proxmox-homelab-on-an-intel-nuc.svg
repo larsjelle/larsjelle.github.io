@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img" aria-label="Intel NUC running Proxmox with two VMs and a set of LXC containers">
+  <defs>
+    <style>
+      .box{fill:#10151c;stroke:#1c2530;stroke-width:1;}
+      .vm{fill:#0f1a17;stroke:#46e39a;stroke-width:1.2;}
+      .lxc{fill:#0d1720;stroke:#2b3a44;stroke-width:1;}
+      .t{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#e6ece8;font-size:13px;font-weight:600;}
+      .s{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#6d7d82;font-size:10px;}
+      .lbl{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#46e39a;font-size:11px;letter-spacing:1px;}
+      .side{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#6d7d82;font-size:10px;letter-spacing:1px;}
+      .cap{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#58d6ff;font-size:10px;}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="758" height="328" rx="12" fill="#0b1116" stroke="#1c2530"/>
+  <text class="lbl" x="22" y="30">// ONE NUC · PROXMOX VE</text>
+  <rect class="box" x="22" y="44" width="716" height="30" rx="6" fill="#0f151b"/>
+  <text class="t" x="380" y="64" text-anchor="middle">Intel NUC — Proxmox VE · vmbr0 bridge</text>
+
+  <text class="side" x="22" y="98">virtual machines</text>
+  <rect class="vm" x="22" y="106" width="350" height="52" rx="7"/>
+  <text class="t" x="42" y="130">Home Assistant</text>
+  <text class="s" x="42" y="147">its own appliance · Zigbee stick passed through</text>
+
+  <rect class="vm" x="388" y="106" width="350" height="52" rx="7"/>
+  <text class="t" x="408" y="130">Docker host</text>
+  <text class="s" x="408" y="147">home for the stubborn multi-container apps</text>
+
+  <text class="side" x="22" y="188">containers · one service each</text>
+  <rect class="lxc" x="22" y="196" width="172" height="44" rx="6"/><text class="t" x="108" y="222" text-anchor="middle" style="font-size:12px">n8n</text>
+  <rect class="lxc" x="206" y="196" width="172" height="44" rx="6"/><text class="t" x="292" y="222" text-anchor="middle" style="font-size:12px">PostgreSQL</text>
+  <rect class="lxc" x="390" y="196" width="172" height="44" rx="6"/><text class="t" x="476" y="222" text-anchor="middle" style="font-size:12px">Qdrant</text>
+  <rect class="lxc" x="574" y="196" width="164" height="44" rx="6"/><text class="t" x="656" y="222" text-anchor="middle" style="font-size:12px">CouchDB</text>
+  <rect class="lxc" x="22" y="248" width="230" height="44" rx="6"/><text class="t" x="137" y="274" text-anchor="middle" style="font-size:12px">Cloudflare Tunnel</text>
+  <rect class="lxc" x="264" y="248" width="230" height="44" rx="6"/><text class="t" x="379" y="274" text-anchor="middle" style="font-size:12px">MySpeed</text>
+  <rect class="lxc" x="506" y="248" width="232" height="44" rx="6"/><text class="t" x="622" y="274" text-anchor="middle" style="font-size:12px">Homepage dashboard</text>
+
+  <text class="cap" x="22" y="316">VMs where hardware or isolation demands it · containers for everything else</text>
+</svg>

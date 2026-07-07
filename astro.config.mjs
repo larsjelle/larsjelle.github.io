@@ -6,20 +6,18 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://larsjelle.github.io',
+  site: 'https://larsjelle.nl',
   output: 'static',
   adapter: undefined,
-  // Blog is disabled for now; send the site root to the About page.
+  // Old /about page retired into the single-page landing.
   redirects: {
-    '/': '/about'
+    '/about': '/#about'
   },
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark'
-      },
+      // Single dark theme to match the always-dark site.
+      theme: 'github-dark',
       wrap: true
     }
   },

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 280" width="760" height="280" role="img" aria-label="Client via Cloudflare DNS to Nginx Proxy Manager over Tailscale to backend services">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#46e39a"/></marker>
+    <style>
+      .box{fill:#10151c;stroke:#1c2530;stroke-width:1;}
+      .acc{fill:#0f1a17;stroke:#46e39a;stroke-width:1.3;}
+      .t{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#e6ece8;font-size:13px;font-weight:600;}
+      .s{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#6d7d82;font-size:10px;}
+      .lbl{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#46e39a;font-size:11px;letter-spacing:1px;}
+      .cap{font-family:ui-monospace,'JetBrains Mono',monospace;fill:#58d6ff;font-size:10px;}
+      .flow{stroke:#46e39a;stroke-width:1.4;fill:none;}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="758" height="278" rx="12" fill="#0b1116" stroke="#1c2530"/>
+  <text class="lbl" x="22" y="30">// PRIVATE HTTPS OVER TAILSCALE</text>
+
+  <rect class="box" x="22" y="110" width="140" height="60" rx="8"/>
+  <text class="t" x="92" y="136" text-anchor="middle">client</text>
+  <text class="s" x="92" y="153" text-anchor="middle">phone / laptop</text>
+
+  <rect class="box" x="200" y="110" width="150" height="60" rx="8"/>
+  <text class="t" x="275" y="132" text-anchor="middle">Cloudflare DNS</text>
+  <text class="s" x="275" y="149" text-anchor="middle">grey-cloud A record</text>
+  <text class="s" x="275" y="163" text-anchor="middle">→ NPM's tailnet address</text>
+
+  <rect class="acc" x="388" y="102" width="170" height="76" rx="8"/>
+  <text class="t" x="473" y="128" text-anchor="middle">Nginx Proxy Mgr</text>
+  <text class="s" x="473" y="145" text-anchor="middle">wildcard Let's Encrypt</text>
+  <text class="s" x="473" y="159" text-anchor="middle">via Cloudflare DNS-01</text>
+
+  <rect class="box" x="596" y="110" width="142" height="60" rx="8"/>
+  <text class="t" x="667" y="132" text-anchor="middle">backends</text>
+  <text class="s" x="667" y="149" text-anchor="middle">n8n · Proxmox · HA</text>
+  <text class="s" x="667" y="163" text-anchor="middle">on Proxmox LAN</text>
+
+  <path class="flow" marker-end="url(#ah)" d="M162,140 L196,140"/>
+  <path class="flow" marker-end="url(#ah)" d="M350,140 L384,140"/>
+  <path class="flow" marker-end="url(#ah)" d="M558,140 L592,140"/>
+  <text class="s" x="473" y="200" text-anchor="middle">subnet router bridges to the Proxmox LAN</text>
+
+  <text class="cap" x="22" y="262">nothing publicly routable · every hop stays inside the tailnet</text>
+</svg>

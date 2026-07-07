@@ -1,0 +1,50 @@
+---
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const fmt = (d) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<TerminalLayout
+  title="Posts — Lars van Blitterswijk"
+  description="Writing on homelab, automation, AI agents and security by Lars van Blitterswijk."
+  activeNav="posts"
+>
+  <main class="page-wrap">
+    <div class="page-head" data-reveal>
+      <p class="sec-label">
+        <span>~/posts</span> · {posts.length} entr{posts.length === 1 ? "y" : "ies"}
+      </p>
+      <h1 class="page-title">Posts</h1>
+      <p class="page-sub">
+        Notes on homelab, automation, AI agents and security — what I build and what I learn.
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <div class="posts-empty" data-reveal><span class="ok">$</span> no posts published yet — check back soon.</div>
+    ) : (
+      <ul class="posts-list">
+        {posts.map((post) => (
+          <li data-reveal>
+            <a class="post-card" href={`/posts/${post.id}/`}>
+              <span class="post-date">{fmt(post.data.date)}</span>
+              <h2>{post.data.title}</h2>
+              {post.data.excerpt && <p class="post-excerpt">{post.data.excerpt}</p>}
+              {post.data.categories.length > 0 && (
+                <div class="post-tags">
+                  {post.data.categories.map((c) => <span class="post-tag">{c}</span>)}
+                </div>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+</TerminalLayout>
